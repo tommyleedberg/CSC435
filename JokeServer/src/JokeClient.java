@@ -1,14 +1,21 @@
-/**
- * InetClient.java
- */
+/*--------------------------------------------------------
+    Name: Tommy Leedberg
+    Date: September 12, 2018
+    Java Version: 1.8.0_181
 
+    Command-Line Examples:
+    Usage: java JokeClient -p [port to open] -h [host name]
+    Note: If no port is selected it uses a default of 1565
+
+    Instructions:
+----------------------------------------------------------*/
 import java.io.*;
 import java.net.*;
 
 /**
  * Inet Client class to connect to an inet server
  */
-public class InetClient
+public class JokeClient
 {
     public static void main(String args[])
     {
@@ -20,7 +27,7 @@ public class InetClient
         {
             System.out.println("No port specified so using default port: 1565");
             System.out.println("No hostname specified so using default: localhost");
-            System.out.println("Usage: java InetClient -p [port to open] -h [host name]");
+            System.out.println("Usage: java JokeClient -p [port to open] -h [host name]");
         }
 
         // look for the CL params for the port or hostname
@@ -83,7 +90,7 @@ public class InetClient
             fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             toServer = new PrintStream(socket.getOutputStream());
 
-            // Send the machine name or IP address to server for lookup
+            // Send machine name or IP address to server
             toServer.println(name);
             toServer.flush();
 
