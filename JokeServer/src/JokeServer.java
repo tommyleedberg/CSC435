@@ -2,7 +2,7 @@
     Name: Tommy Leedberg
     Date: September 12, 2018
     Java Version: 1.8.0_181
-    
+
     Command-Line Examples:
     Usage: java JokeServer -p [port to open]
     Note: If no port is selected it uses a default of 1565
