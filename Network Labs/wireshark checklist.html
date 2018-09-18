@@ -39,47 +39,47 @@ Yes                   </b></td></tr>
 
 <tr> <td align="left"><b>
 I have completed the Intro lab</b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 I have completed the IP lab
 </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 I have completed the DNS lab
 </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 I have completed the HTTP lab
 </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 I have completed the TCP lab
 </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 I have completed the UDP lab
 </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 I have completed the SSL lab
 </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 I have inserted my one-page write-up into the bottom of the checklist.
 </b></td><td align="left"><b>
-No          </b></td></tr>
+Yes          </b></td></tr>
 
 <tr> <td align="left"><b>
 I will have submitted this checklist to D2L
 </b></td><td align="left"><b>
-No          </b></td></tr>
+Yes          </b></td></tr>
 
 <tr> <td align="left"><b>
 Bragging Rights Below ---------------------
@@ -89,7 +89,7 @@ This Line          </b></td></tr>
 <tr> <td align="left"><b>
 I did something cool and posted it at the discussion forum
 </b></td><td align="left"><b>
-No          </b></td></tr>
+Yes, in response to another students post.          </b></td></tr>
 
 </table>
 
@@ -99,12 +99,104 @@ No          </b></td></tr>
 [Insert your one-page write-up here. What did you do?]
 </pre>
 
-You can also use this format:<p>
+<p>Wire Shark Intro Lab:</p>
+When using Wireshark there are a handful of protocols that come in. Three of the first ones that I noticed were DNS, TCP, and HTTP. <br>
+The total round-trip time for the request to and from was relatively short, it was ~.04 seconds. The web address for the remote computer<br>
+is 128.119.245.12 while my local IP address is 192.168.0.110. I printed the two packets to pdf but because they are an image I could not attach<br>
+them here.
+ 
+<p>IP Lab</p>
+My computers IP address is 192.168.0.110. The protocol fields value is 1 for ICMP. The IP header has 20 bytes. The total bytes of the entire packet<br>
+is 56 so the body byte size is 56 – 20 or 36 bytes. The IP datagram has not been fragmented and you can tell this because there is no “More Fragments” flag.<br>
+The fields that always change in the IP datagram are the TTL, the header checksum and the Identification. Every other field remains the same. I suspect<br>
+the identification changes because every packet has it’s own id and the TTL changes because the route always adds 1 to the TTL of the packet so that it can<br>
+make it 1 router further than the last packet. The routers always decrement the TTL by 1 until the value is 1 in which case it returns to sender. The value for<br>
+the identification field also always increments by 1. All the values in the TTL-exceeded replies are the same. The identification is likely the same because an ID<br>
+of 0 represents a TTL-exceeded packet so all packets that are of type TTL-exceeded will contain the same Id. I think the TTL values are identical because<br>
+the TTL for the first hop router is always the same and it’s the last router to get the packet before it returns to my computer. For the 2000 packet size the message has been<br>
+fragmented into 2 fragments. With wireshark set up to re-assemble the fragmented packets you can tell a packet is part of a fragment because it contains a “Fragments” section in<br>
+the IP header. This tells you how many fragments your packet was broken into, what size they are, and what frame they were. If you correlate the Frame in the Fragments section to the Frame at<br>
+the packet header you can tell which fragment your packet is. The Fully assembled IP packet is 1980 bytes broken up into 2 fragments of 0-1479 bytes and 1480-1979 bytes. The packets with<br>
+a size of 3500 are broken up into 3 fragments. The field that always changes in each fragment is the identifier.
 
-Paragraph one <p>
+<p>DNS Lab:</p>
+I ran an nslookup to obtain the ip address of the Asian Institute of Technology:<br>
+<code>
+PS C:\WINDOWS\system32> nslookup www.ait.ac.th
+Server:  UnKnown<br>
+Address:  192.168.0.1<br>
+<br>
+Non-authoritative answer:<br>
+Name:    ait.client.bypronto.com<br>
+Addresses:  2600:1f18:43b:9300:6b82:a21e:ab8c:7b63<br>
+          52.1.32.33<br>
+Aliases:  www.ait.ac.th<br>
+</code><br>
+I ran an nslookup to determine oxford universities authoritative DNS servers:<br>
+<code>
+PS C:\WINDOWS\system32> nslookup -type=NS www.ox.ac.uk<br>
+Server:  UnKnown<br>
+Address:  192.168.0.1<br>
+<br>
+ox.ac.uk<br>
+        primary name server = nighthawk.dns.ox.ac.uk<br>
+       responsible mail addr = hostmaster.ox.ac.uk<br>
+        serial  = 2018091372<br>
+        refresh = 3600 (1 hour)<br>
+        retry   = 1800 (30 mins)<br>
+        expire  = 1209600 (14 days)<br>
+       default TTL = 900 (15 mins)<br>
+</code><br>
+When I tried running the DNS lookup off of 2 servers I kept getting a timeout, I tried turning off my firewall, using a cloud vm and using different servers but the result was always the same.<br>
+I'm guessing i have a configuration issue somewhere on my network that I couldnt resolve.<br>
+<code>
+PS C:\WINDOWS\system32> nslookup mail.yahoo.com www.ox.ac.uk<br>
+DNS request timed out.<br>
+    timeout was 2 seconds.<br>
+Server:  UnKnown<br>
+Address:  129.67.242.155<br>
+<br>
+DNS request timed out.<br>
+    timeout was 2 seconds.<br>
+DNS request timed out.<br>
+    timeout was 2 seconds.<br>
+DNS request timed out.<br>
+    timeout was 2 seconds.<br>
+DNS request timed out.<br>
+    timeout was 2 seconds.<br>
+*** Request to UnKnown timed-out<br>
+</code></br>
+The source port of the DNS response message is 53649 and the destination port of the query is 53 over the User Datagram Protocol(UDP).<br>
+The DNS query message was sent to 192.168.0.1 which is also the ip address of my DNS server. The query was a Type A query that contained no answers. The response contains 3 answers.<br>
+The first answer contains the CNAME for www.ietf.org which is www.ietf.org.cdn.cloudflare.net. THe next two contain the ip address of the 2 host servers which are 104.20.0.85 and 104.20.1.85.<br>
+Yes, the TCP SYN packet is addressed to the first how server address, 104.20.0.85. Yes, there are multiple queries to other DNS locations while the page is loading images.<br>
+The destination port for the dns query is port 53 and the source port is 51417. The destination IP address is 192.168.0.1 which is also my DNS Servers IP address.<br>
+The type of query is A and the query contains no answers. The response message however contains 3 answers it has 2 name servers provided. One is www.mit.edu.edgekey.net and the other is e9566.dscb.akamaiedge.net.<br>
+The query's destination is 18.72.0.3 which is the would be the ip address of the MIT server. The query is a Type A query and contains no answers.<br> There is only 1 anwer in the reply and it contains the IP address of the the webserver.<br>
 
-Paragraph two <p>
+<p>HTTP Lab</p>
+The browser and the server are both running version 1.1 of http and it accepts english as a language. My ip address is 192.168.0.110 while the gia servers ip address is 128.119.245.12. The html file was last modified on september 17 2018. The file has a size<br>
+of 128 bytes. There arent any headers in the packet that are not desplayed. The first GET request doesnt contain an IF modified line. The first request does not contain the if-modified header and it returns the data from the server itself<br>
+you can tell because it has all the text is there in the Line-Based text field. THe second request has the If-Modfieid flag so no text is returned. The Http status code was 304 for Not Modified.<br>
+There was onle 1 request issued and the response was issued @ packet 33 and the response was issued @packet 39. The response's status code was 200 for OK. There were 3 packets with the data in them, 35, 36, and 38.<br>
+There are 3 requests sent out. One for the text and two for images. the first image comes back as a PNG and the second as a JPEG. All responses have a 200 status code.<br>The first request is an unauthorized request while the second request is<br>
+a 200 OK response. The second request contains the authorization header which has the base 64 encoded username/password included in it.
 
-etc.
+<p>TCP Lab</p>
+The client's port is 51599 and the IP address is 192.168.0.110. The Servers IP address and port is 128.119.245.12 and 80. The source IP address for sending the packets is the same for every packet which is my ip address and port.<br>
+The seq number for the TCP syn packet is 0. You can tell its a syn segment because it contains the SYN flag. The sequence number of the response to the syn is also 0. The acknowledgement fields value is 1. the sequence number of the post request is <br>
+164041. The first packet is 565 bytes the next 5 are 1460 bytes. The minumum window size is 17520 as stated in the first ack'd packet. There are no retransmitted packets. You can tell because the seq # for all the segments is increasing. Due to the <br>
+length restriction i omited the answers to the rest of the questions here but have done them seperatly.
 
+<p>UDP Lab</p>
+The UPD packet has 4 fields. Source and Destination Ports, length, and checksum. Each header field has 2 bytes of space. The length field contains 181 bytes which is made up of the 8 header bytes and the 173 data bytes. The maximum number of bytes<br>
+available in any UPD packet is 65535 the amount of data that can be in the UPD packet is 65535 - the number of bytes required for the header(8) and minus the 20 bytes required for the ip address so it is only 65507 bytes. The largest port number can be<br>
+65535. The decimal protocol version is 17 or 0x11 in hex. The source and destination port numbers are reversed from request to response.
+<p>SSL Lab</p>
+Content Type with 1 byte, Version with 2 bytes, and Length with 2 bytes. The content type is a handshake, or 22. The challenges byte stream is 66 df 78 4c 04 8c d6 04 35 dc 44 89 00 80 89 46 99 09. It supports 17 different specs. The first one has <br>
+a Public Key algorithm of RSA a Symmetric Key Algorithm os RC4 and a Hash Algorithm of MD5. The server hellos has a Public Key lgorithm of RSA a Symmetric Key Algorithm os RC4 and a Hash Algorithm of MD5. There is no challenge here. It does have a session id<br>
+with a length of 32 bytes. It will allow a client to cancel and resume their session later over a new socket using that id. This record doesnt have a cert but another record does contain it. The cert does fit into a single frame. Yes the packet contains<br>
+A pre-master secret that is encrypted with 128 bytes from the public key algorithm. The pre master secret is used to create the master secret. The change cipher spec record will indicate when an encrypted message is coming in. This one has 6 bytes.<br>
+Yes the server also has an encrypted change cipher spec. The servers change cipher spec is much larger and contains a cipher spec message. The application data is encrypted using the RC4 encryption algorithm. One thing that is interesting about the trace<br>
+is how often the hello is sent back and forth between the server and the client. I believe this is to ensure the connection is true but it's still interesting how often it has to happen.
 </body></html>
