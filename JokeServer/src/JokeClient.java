@@ -15,7 +15,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Base64;
 
 /**
  * The Joke Server client
@@ -24,19 +26,25 @@ public class JokeClient
 {
     private static ArrayList<String> jokes = new ArrayList<>();
     private static ArrayList<String> proverbs = new ArrayList<>();
-    private String userToken;
+    private static String UserToken;
+    private static String ServerAddress;
+    private static int Port;
+    private static Socket Client;
 
     public static void main(String args[])
     {
-        // get the server name
-        String serverName = "localhost";
-        int port = 1565;
+
+        // set the default server address and port
+        ServerAddress = "localhost";
+        Port = 1565;
 
         if (args.length == 0)
         {
+            System.out.println("\n-------------------------------------------------------");
             System.out.println("No port specified so using default port: 1565");
             System.out.println("No hostname specified so using default: localhost");
             System.out.println("Usage: java JokeClient -p [port to open] -h [host name]");
+            System.out.println("-------------------------------------------------------\n");
         }
 
         // look for the CL params for the port or hostname
@@ -44,30 +52,31 @@ public class JokeClient
         {
             if (args[i].contains("-p"))
             {
-                port = Integer.parseInt(args[i + 1]);
+                Port = Integer.parseInt(args[i + 1]);
             }
 
             if (args[i].contains("-h"))
             {
-                serverName = args[i + 1];
+                ServerAddress = args[i + 1];
             }
         }
 
-        System.out.println("Tommy Leedberg's Inet Client, 1.8.\n");
-        System.out.println(String.format("Using server: " + serverName + ", Port: %s\n", port));
+        System.out.println("Tommy Leedberg's Joke Server Client, 1.8.\n");
+        System.out.println(String.format("Using server: " + ServerAddress + ", Port: %s\n", Port));
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
         try
         {
-            String name = "";
-            while (!name.contains("quit"))
+            generateUserToken(in);
+            String request = "";
+            while (!request.contains("quit"))
             {
                 System.out.print("Enter a hostname or an IP address to get from the server, (quit) to end: ");
                 System.out.flush();
                 name = in.readLine();
                 if (name.indexOf("quit") < 0)
                 {
-                    writeServerRequest(name, serverName, port);
+                    writeServerRequest(request);
                 }
             }
             System.out.println("Cancelled by user request.");
@@ -84,7 +93,7 @@ public class JokeClient
      * @param name
      * @param serverName
      */
-    private static void writeServerRequest(String name, String serverName, int port)
+    private static void writeServerRequest()
     {
         Socket socket;
         BufferedReader fromServer;
@@ -94,7 +103,7 @@ public class JokeClient
         try
         {
             // Open a connection to server
-            socket = new Socket(serverName, port);
+            socket = new Socket(ServerName, port);
 
             // Open an I/O pipe with the socket
             fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -117,4 +126,57 @@ public class JokeClient
             x.printStackTrace();
         }
     }
+
+    private static ServerRequest generateRequest(String requestMessage)
+    {
+        ServerRequest request = new ServerRequest();
+        request.userId = UserToken;
+        request.clientRequest = requestMessage;
+
+        return request;
+    }
+
+    private static void generateUserToken( BufferedReader in)
+    {
+        try
+        {
+            System.out.println( "What is your username?");
+            System.out.flush();
+            String userToken = in.readLine();
+
+            System.out.println( "What is your password?");
+            System.out.flush();
+            userToken = userToken + in.readLine();
+
+            UserToken = Base64.getEncoder().encodeToString(userToken.getBytes());
+        }
+        catch (IOException ex)
+        {
+            System.out.println("Error reading username. Exception: " + ex);
+        }
+    }
+
+    /**
+     * Open a new connection on the requested server address and port
+     * due to limitations on files code is duplicated
+     * @return
+     */
+    private static Boolean openConnection()
+    {
+        try
+        {
+            Client = new Socket(ServerAddress, Port);
+            return true;
+        }
+        catch (UnknownHostException ex)
+        {
+            System.out.println("Invalid Host exception " + ex);
+            return false;
+        }
+        catch (IOException ex)
+        {
+            return false;
+        }
+    }
 }
+

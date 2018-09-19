@@ -33,7 +33,7 @@ class ClientWorker extends Thread
     public static ServerModes ServerMode = ServerModes.JOKES;
     private static Map<Integer, String> Jokes = new HashMap<>();
     private static Map<Integer, String> Proverbs = new HashMap<>();
-    private static Map<Integer, String> Users = new HashMap<>();
+    private static Map<String, int[]> Users = new HashMap<>();
     private Socket socket;
 
     ClientWorker(Socket s)
@@ -66,10 +66,31 @@ class ClientWorker extends Thread
 
                 switch (request.clientRequest)
                 {
-                    case "JOKE_MODE":
+                    case "GET":
                     {
-                        ServerMode = ServerMode.JOKES;
-                        System.out.print("Setting server in Joke Mode");
+                        if( ServerMode == ServerMode.JOKES)
+                        {
+                            if( Users.containsKey(request.userId))
+                            {
+                                out.println(Jokes.get(1));
+                            }
+                            else
+                            {
+                                out.println(Jokes.get(1));
+                            }
+                        }
+                        else if( ServerMode == ServerMode.PROVERBS)
+                        {
+                            if( Users.containsKey(request.userId))
+                            {
+                                out.println(Proverbs.get(1));
+                            }
+                            else
+                            {
+                                out.println(Proverbs.get(1));
+                            }
+                        }
+
                         break;
                     }
                     case "PROVERB_MODE":
@@ -97,20 +118,27 @@ class ClientWorker extends Thread
         }
     }
 
+    /**
+     * Initialize the joke list
+     */
     private void initializeJokes()
     {
-        ClientWorker.Jokes.put(1, "JokeA");
-        ClientWorker.Jokes.put(2, "JokeB");
-        ClientWorker.Jokes.put(3, "JokeC");
-        ClientWorker.Jokes.put(4, "JokeD");
+        ClientWorker.Jokes.put(1, "What's the difference between a well dressed man on a unicycle and a poor dressed " +
+                                  "man on a bicycle? Attire.");
+        ClientWorker.Jokes.put(2, "Why should you stand in the corner if you get cold? It's always 90 degrees.");
+        ClientWorker.Jokes.put(3, "Why can't you trust an atom? Because they make up literally everything.");
+        ClientWorker.Jokes.put(4, "What does a grape say when it's stepped on? Nothing it just lets out a little wine");
     }
 
+    /**
+     * Initialize the Proverbs list
+     */
     private void initalizeProverbs()
     {
-        ClientWorker.Proverbs.put(1, "ProverbA");
-        ClientWorker.Proverbs.put(2, "ProverbB");
-        ClientWorker.Proverbs.put(3, "ProverbC");
-        ClientWorker.Proverbs.put(4, "ProverbD");
+        ClientWorker.Proverbs.put(1, "Fortune favors the bold.");
+        ClientWorker.Proverbs.put(2, "Better late than never.");
+        ClientWorker.Proverbs.put(3, "Never look a gift horse in the mouth.");
+        ClientWorker.Proverbs.put(4, "If it ain't broke, don't fix it");
     }
 
     /**
