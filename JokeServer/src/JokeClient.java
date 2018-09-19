@@ -9,21 +9,30 @@
 
     Instructions:
 ----------------------------------------------------------*/
-import java.io.*;
-import java.net.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.Socket;
+import java.util.ArrayList;
 
 /**
- * Inet Client class to connect to an inet server
+ * The Joke Server client
  */
 public class JokeClient
 {
+    private static ArrayList<String> jokes = new ArrayList<>();
+    private static ArrayList<String> proverbs = new ArrayList<>();
+    private String userToken;
+
     public static void main(String args[])
     {
         // get the server name
         String serverName = "localhost";
         int port = 1565;
 
-        if( args.length == 0)
+        if (args.length == 0)
         {
             System.out.println("No port specified so using default port: 1565");
             System.out.println("No hostname specified so using default: localhost");
@@ -31,14 +40,14 @@ public class JokeClient
         }
 
         // look for the CL params for the port or hostname
-        for(int i = 0; i < args.length; ++i)
+        for (int i = 0; i < args.length; ++i)
         {
-            if( args[i].contains("-p"))
+            if (args[i].contains("-p"))
             {
                 port = Integer.parseInt(args[i + 1]);
             }
 
-            if( args[i].contains("-h"))
+            if (args[i].contains("-h"))
             {
                 serverName = args[i + 1];
             }
@@ -51,14 +60,14 @@ public class JokeClient
         try
         {
             String name = "";
-            while( !name.contains("quit"))
+            while (!name.contains("quit"))
             {
                 System.out.print("Enter a hostname or an IP address to get from the server, (quit) to end: ");
                 System.out.flush();
                 name = in.readLine();
                 if (name.indexOf("quit") < 0)
                 {
-                    getRemoteAddress(name, serverName, port);
+                    writeServerRequest(name, serverName, port);
                 }
             }
             System.out.println("Cancelled by user request.");
@@ -70,11 +79,12 @@ public class JokeClient
     }
 
     /**
-     * Get the remote address
+     * Writes a request to the remote address
+     *
      * @param name
      * @param serverName
      */
-    private static void getRemoteAddress(String name, String serverName, int port)
+    private static void writeServerRequest(String name, String serverName, int port)
     {
         Socket socket;
         BufferedReader fromServer;
@@ -95,7 +105,7 @@ public class JokeClient
             toServer.flush();
 
             // read in and then print out the response from the server
-            while((textFromServer = fromServer.readLine()) != null && textFromServer.length() != 0)
+            while ((textFromServer = fromServer.readLine()) != null && textFromServer.length() != 0)
             {
                 System.out.println(textFromServer);
             }
