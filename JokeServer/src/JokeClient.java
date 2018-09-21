@@ -3,20 +3,29 @@
     Date: September 12, 2018
     Java Version: 1.8.0_181
 
-    Command-Line Examples:
-    Usage: java JokeClient -p [port to open] -h [host name]
-    Note: If no port is selected it uses a default of 1565
+     Command-Line Examples:
+     Usage: java JokeClient [server address] [server address]
+
+           Connect to 1 server only
+           java JokeClientlocalhost
+
+           NOTE: Not implemented yet
+           Start to 2 servers
+           java jokeClient localhost localhost
 
     Instructions:
+    javac JokeClient
 ----------------------------------------------------------*/
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 
 /**
@@ -24,131 +33,122 @@ import java.util.Base64;
  */
 public class JokeClient
 {
-    private static ArrayList<String> jokes = new ArrayList<>();
-    private static ArrayList<String> proverbs = new ArrayList<>();
-    private static String UserToken;
-    private static String ServerAddress;
-    private static int Port;
-    private static Socket Client;
+     static String PrimaryServerAddress = "localhost";
+    static int PrimaryPort = 4545;
+    static String SecondaryServerAddress = "localhost";
+    static int SecondaryPort = 4546;
+
 
     public static void main(String args[])
     {
-
-        // set the default server address and port
-        ServerAddress = "localhost";
-        Port = 1565;
-
         if (args.length == 0)
         {
-            System.out.println("\n-------------------------------------------------------");
-            System.out.println("No port specified so using default port: 1565");
+            System.out.println("\n-----------------------------------------------------------------------");
             System.out.println("No hostname specified so using default: localhost");
-            System.out.println("Usage: java JokeClient -p [port to open] -h [host name]");
-            System.out.println("-------------------------------------------------------\n");
+            System.out.println("Usage: java JokeClient [server address] [secondary server address]");
+            System.out.println("--------------------------------------------------------------------------\n");
         }
 
-        // look for the CL params for the port or hostname
-        for (int i = 0; i < args.length; ++i)
+        // Check if there were command line arguments supplied specifying the server address
+        if (args.length == 1)
         {
-            if (args[i].contains("-p"))
-            {
-                Port = Integer.parseInt(args[i + 1]);
-            }
-
-            if (args[i].contains("-h"))
-            {
-                ServerAddress = args[i + 1];
-            }
+            PrimaryServerAddress = args[0];
         }
 
+        try
+        {
+            // create a new admin client thread to listen on port 5050
+            PrimaryJokeClient primaryClientThread = new PrimaryJokeClient();
+            Thread aThread = new Thread(primaryClientThread);
+            aThread.start();
+        }
+        catch (Exception e)
+        {
+            System.out.println("Failed to create second client thread with exception: " + e);
+        }
+
+    }
+}
+
+class PrimaryJokeClient implements Runnable
+{
+    public void run()
+    {
+        try
+        {
+            new JokeClientWorker(JokeClient.PrimaryPort, JokeClient.PrimaryServerAddress).start();
+        }
+        catch (Exception e)
+        {
+            System.out.println("Failed to start client admin worker with exception: " + e);
+        }
+    }
+}
+
+class SecondaryJokeClient implements Runnable
+{
+    public void run()
+    {
+        try
+        {
+            new JokeClientWorker(JokeClient.SecondaryPort, JokeClient.SecondaryServerAddress).start();
+        }
+        catch (Exception e)
+        {
+            System.out.println("Failed to start client admin worker with exception: " + e);
+        }
+    }
+}
+
+class JokeClientWorker extends Thread
+{
+    private int port;
+    private String serverAddress;
+    private String userToken;
+    private Socket client;
+
+    JokeClientWorker(int port, String serverAddress)
+    {
+
+        this.port = port;
+        this.serverAddress = serverAddress;
+    }
+
+    public void run()
+    {
         System.out.println("Tommy Leedberg's Joke Server Client, 1.8.\n");
-        System.out.println(String.format("Using server: " + ServerAddress + ", Port: %s\n", Port));
+        System.out.println(String.format("Using server: " + this.serverAddress + ", Port: %s\n", this.port));
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
         try
         {
+            // Ask for the user credentials
             generateUserToken(in);
-            String request = "";
-            while (!request.contains("quit"))
+            String request;
+            while (!(request = in.readLine()).contains("quit"))
             {
-                System.out.print("Enter a hostname or an IP address to get from the server, (quit) to end: ");
-                System.out.flush();
-                name = in.readLine();
-                if (name.indexOf("quit") < 0)
-                {
-                    writeServerRequest(request);
-                }
+                writeServerRequest( "GET");
             }
             System.out.println("Cancelled by user request.");
         }
-        catch (IOException x)
+        catch (IOException e)
         {
-            x.printStackTrace();
+            System.out.println("Error getting user input. Exception: " + e);
         }
     }
 
-    /**
-     * Writes a request to the remote address
-     *
-     * @param name
-     * @param serverName
-     */
-    private static void writeServerRequest()
-    {
-        Socket socket;
-        BufferedReader fromServer;
-        PrintStream toServer;
-        String textFromServer;
-
-        try
-        {
-            // Open a connection to server
-            socket = new Socket(ServerName, port);
-
-            // Open an I/O pipe with the socket
-            fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            toServer = new PrintStream(socket.getOutputStream());
-
-            // Send machine name or IP address to server
-            toServer.println(name);
-            toServer.flush();
-
-            // read in and then print out the response from the server
-            while ((textFromServer = fromServer.readLine()) != null && textFromServer.length() != 0)
-            {
-                System.out.println(textFromServer);
-            }
-            socket.close();
-        }
-        catch (IOException x)
-        {
-            System.out.println("Socket error.");
-            x.printStackTrace();
-        }
-    }
-
-    private static ServerRequest generateRequest(String requestMessage)
-    {
-        ServerRequest request = new ServerRequest();
-        request.userId = UserToken;
-        request.clientRequest = requestMessage;
-
-        return request;
-    }
-
-    private static void generateUserToken( BufferedReader in)
+    private  void generateUserToken( BufferedReader in)
     {
         try
         {
             System.out.println( "What is your username?");
             System.out.flush();
-            String userToken = in.readLine();
-
-            System.out.println( "What is your password?");
-            System.out.flush();
-            userToken = userToken + in.readLine();
-
-            UserToken = Base64.getEncoder().encodeToString(userToken.getBytes());
+            this.userToken = in.readLine();
+            if(this.userToken.length() == 0)
+            {
+                System.out.println( "You must enter a valid username");
+                this.generateUserToken(in);
+            }
         }
         catch (IOException ex)
         {
@@ -157,15 +157,56 @@ public class JokeClient
     }
 
     /**
+     * Writes a request to the remote address
+     */
+    private void writeServerRequest(String userRequest)
+    {
+        BufferedReader fromServer;
+        PrintStream toServer;
+        String textFromServer;
+
+        try
+        {
+            // Open a connection to server
+            if( !openConnection() )
+            {
+                System.out.println("Waiting on Server Connection...");
+                return;
+            }
+
+            ServerRequest request = new ServerRequest( userRequest, this.userToken );
+
+            // create an output stream on the specified socket
+            toServer = new PrintStream(this.client.getOutputStream());
+            // create an input stream on the specified socket
+            fromServer = new BufferedReader( new InputStreamReader(this.client.getInputStream()));
+
+            // Send the joke server the command
+            toServer.println(request.toString());
+            toServer.flush();
+
+            // read in and then print out the response from the server
+            while ((textFromServer = fromServer.readLine()) != null && textFromServer.length() != 0)
+            {
+                System.out.println(textFromServer);
+            }
+        }
+        catch (IOException x)
+        {
+            System.out.println("Socket error.");
+            x.printStackTrace();
+        }
+    }
+    /**
      * Open a new connection on the requested server address and port
      * due to limitations on files code is duplicated
      * @return
      */
-    private static Boolean openConnection()
+    private  Boolean openConnection()
     {
         try
         {
-            Client = new Socket(ServerAddress, Port);
+            this.client = new Socket(this.serverAddress, this.port);
             return true;
         }
         catch (UnknownHostException ex)

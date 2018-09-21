@@ -5,31 +5,36 @@
     Command-Line Examples/Instructions:
 
     Command-Line Examples:
-    Usage: java JokeClient -h [host name]
-    Note: If no Port is selected it uses a default of 1565
+    Usage: java JokeClientAdmin [server address] [server address]
+
+           Connect to 1 server only
+           java JokeClientAdmin localhost
+
+           NOTE: Not implemented yet
+           Start to 2 servers
+           java jokeClientAdmin localhost localhost
 
     Instructions:
-----------------------------------------------------------*/
-import com.sun.security.ntlm.Server;
+    To compile javac JokeClientAdmin
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+    To change mode enter either JOKE_MODE or PROVERB_MODE
+    depending on the mode you want to switch to
+----------------------------------------------------------*/
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class JokeClientAdmin
 {
+    //The default port is 5050 or 5051 when two servers are running
     private static final int Port = 5050;
-    private static String ServerAddress;
+    private static final int SecondaryServerPort = 5051;
+    private static String ServerAddress = "localHost";
+    private static String SecondaryServerAddress = "localHost";
     private static Socket Client;
 
     public static void main(String args[])
     {
-        // get the server name
-        ServerAddress = "localhost";
-
         if (args.length == 0)
         {
             System.out.println("\n-------------------------------------------------------");
@@ -38,13 +43,15 @@ public class JokeClientAdmin
             System.out.println("-------------------------------------------------------\n");
         }
 
-        // look for the CL params for the Port or hostname
-        for (int i = 0; i < args.length; ++i)
+        // Check if there were command line arguments supplied specifying the server address
+        if (args.length == 1)
         {
-            if (args[i].contains("-h"))
-            {
-                ServerAddress = args[i + 1];
-            }
+            ServerAddress = args[0];
+        }
+        else if(args.length == 2)
+        {
+            ServerAddress = args[0];
+            SecondaryServerAddress = args[1];
         }
 
         System.out.println("Tommy Leedberg's Joke Server Admin Client, 1.8.");
@@ -56,28 +63,22 @@ public class JokeClientAdmin
             String command = "";
             while (!command.contains("quit"))
             {
-                boolean isConnected = false;
-
                 System.out.print("What mode would you like to put the JokeServer in? (JOKE_MODE, PROVERB_MODE)");
                 System.out.flush();
                 command = in.readLine();
 
-                // If the connection isn't available yet try to connect again.
-                // Wrapped in a conditional to avoid excessive console output
-                if(!isConnected)
+                // If the connection isn't available yet do not try to send a message.
+                if(!openConnection())
                 {
-                    isConnected = openConnection();
-                    if( !isConnected )
-                    {
-                        System.out.println("Waiting on Server Connection...");
-                        continue;
-                    }
+                    System.out.println("Waiting on Server Connection...");
+                    continue;
                 }
 
                 writeServerRequest(command);
                 System.out.flush();
+                Client.close();
             }
-            Client.close();
+
             System.out.println("Cancelled by user request.");
 
         }
@@ -90,37 +91,46 @@ public class JokeClientAdmin
     /**
      * Writes a request to the remote address
      */
-    private static void writeServerRequest(String request)
+    private static void writeServerRequest(String command)
     {
-        BufferedReader fromServer;
         PrintStream toServer;
+        BufferedReader fromServer;
         String textFromServer;
 
         try
         {
-            // Open an I/O pipe with the socket
-            fromServer = new BufferedReader(new InputStreamReader(Client.getInputStream()));
+            ServerRequest request = new ServerRequest();
+            request.clientRequest = command;
+
+            // create an output stream on the specified socket
             toServer = new PrintStream(Client.getOutputStream());
+            // create an input stream on the specified socket
+            fromServer = new BufferedReader( new InputStreamReader(Client.getInputStream()));
 
             // Send the joke server the command
-            toServer.println(request);
+            toServer.println(request.toString());
             toServer.flush();
 
-            // read in and then print out the response from the server
-            while ((textFromServer = fromServer.readLine()) != null && textFromServer.length() != 0)
-            {
-                System.out.println(textFromServer);
-            }
+           // read in and then print out the response from the server
+           while ((textFromServer = fromServer.readLine()) != null && textFromServer.length() != 0)
+           {
+               System.out.println(textFromServer);
+           }
         }
         catch (IOException x)
         {
             System.out.println("Socket error.");
             x.printStackTrace();
         }
+        catch( Exception e)
+        {
+            System.out.println( "Socket error.");
+        }
     }
 
     /**
-     * Open a new connection on the requested server address and port
+     * Open a new connection on the requested server address and port, normally this would be in a common lib shared
+     * by the clients that need it but due to the file name restrictions of the assignment it has to be duplicated code
      * @return
      */
     private static Boolean openConnection()
