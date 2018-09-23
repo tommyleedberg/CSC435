@@ -14,12 +14,19 @@
     java JokeServer secondary
 
     Instructions:
-    javac JokeServer
+    To Compile:
+    javac JokeServer.java
 ----------------------------------------------------------*/
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 enum ServerModes
 {
@@ -35,9 +42,11 @@ class ServerRequest
     public String userId;
     public String clientRequest;
 
-    ServerRequest() {}
+    ServerRequest()
+    {
+    }
 
-    ServerRequest(String clientRequest,  String userId )
+    ServerRequest(String clientRequest, String userId)
     {
         this.clientRequest = clientRequest;
         this.userId = userId;
@@ -50,7 +59,7 @@ class ServerRequest
         this.clientRequest = requestProperties[0];
 
         // user id's are not required for the admin client so we may not have a value for tone
-        if( requestProperties.length == 2 )
+        if (requestProperties.length == 2)
         {
             this.userId = requestProperties[1];
         }
@@ -74,7 +83,7 @@ class JokeProverb
     private String id;
     private String body;
 
-    JokeProverb( String id, String body )
+    JokeProverb(String id, String body)
     {
         this.id = id;
         this.body = body;
@@ -118,7 +127,7 @@ class ClientWorker extends Thread
     {
         System.out.println("Client Connected");
 
-        PrintStream out = null ;
+        PrintStream out = null;
         BufferedReader in = null;
 
         try
@@ -126,7 +135,7 @@ class ClientWorker extends Thread
             // create an output stream on the specified socket
             out = new PrintStream(this.socket.getOutputStream());
             // create an input stream on the specified socket
-            in = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 
             try
             {
@@ -137,15 +146,15 @@ class ClientWorker extends Thread
                 {
                     case "GET":
                     {
-                        if( ServerMode == ServerMode.JOKES)
+                        if (ServerMode == ServerMode.JOKES)
                         {
-                            if( !UsersJokes.containsKey(request.userId))
+                            if (!UsersJokes.containsKey(request.userId))
                             {
                                 this.initializeUsersJokes(request.userId);
                             }
 
                             String jokeId = getNextJoke(request.userId);
-                            if( jokeId == "" )
+                            if (jokeId == "")
                             {
                                 this.shuffleJokes(request.userId);
                                 out.println("JOKE CYCLE COMPLETED");
@@ -153,15 +162,15 @@ class ClientWorker extends Thread
                             }
                             out.println(buildJokeResponse(request.userId, jokeId));
                         }
-                        else if( ServerMode == ServerMode.PROVERBS)
+                        else if (ServerMode == ServerMode.PROVERBS)
                         {
-                            if( !UsersProverbs.containsKey(request.userId))
+                            if (!UsersProverbs.containsKey(request.userId))
                             {
                                 this.initializeUsersProverbs(request.userId);
                             }
 
                             String proverbId = getNextProverb(request.userId);
-                            if( proverbId == "" )
+                            if (proverbId == "")
                             {
                                 this.shuffleProverbs(request.userId);
                                 out.println("PROVERB CYCLE COMPLETED");
@@ -194,10 +203,10 @@ class ClientWorker extends Thread
      */
     private void initializeJokes()
     {
-        Jokes.add( new JokeProverb("JA", "What's the difference between a well dressed man on a unicycle and a poor dressed man on a bicycle? Attire."));
-        Jokes.add( new JokeProverb("JB", "Why should you stand in the corner if you get cold? It's always 90 degrees."));
-        Jokes.add( new JokeProverb("JC", "Why can't you trust an atom? Because they make up literally everything."));
-        Jokes.add( new JokeProverb("JD", "What does a grape say when it's stepped on? Nothing it just lets out a little wine"));
+        Jokes.add(new JokeProverb("JA", "What's the difference between a well dressed man on a unicycle and a poor dressed man on a bicycle? Attire."));
+        Jokes.add(new JokeProverb("JB", "Why should you stand in the corner if you get cold? It's always 90 degrees."));
+        Jokes.add(new JokeProverb("JC", "Why can't you trust an atom? Because they make up literally everything."));
+        Jokes.add(new JokeProverb("JD", "What does a grape say when it's stepped on? Nothing it just lets out a little wine"));
     }
 
     /**
@@ -205,20 +214,21 @@ class ClientWorker extends Thread
      */
     private void initializeProverbs()
     {
-        Proverbs.add( new JokeProverb("PA", "Fortune favors the bold."));
-        Proverbs.add( new JokeProverb("PB", "Better late than never."));
-        Proverbs.add( new JokeProverb("PC", "Never look a gift horse in the mouth."));
-        Proverbs.add( new JokeProverb("PD", "If it ain't broke, don't fix it"));
+        Proverbs.add(new JokeProverb("PA", "Fortune favors the bold."));
+        Proverbs.add(new JokeProverb("PB", "Better late than never."));
+        Proverbs.add(new JokeProverb("PC", "Never look a gift horse in the mouth."));
+        Proverbs.add(new JokeProverb("PD", "If it ain't broke, don't fix it"));
     }
 
     /**
      * Initialize a new user's jokes by adding them to the UsersJokes hashmap
+     *
      * @param userId the userId
      */
     private void initializeUsersJokes(String userId)
     {
         LinkedHashMap<String, Boolean> jokeIds = new LinkedHashMap<>();
-        for( JokeProverb joke : Jokes)
+        for (JokeProverb joke : Jokes)
         {
             jokeIds.put(joke.getId(), false);
         }
@@ -228,12 +238,13 @@ class ClientWorker extends Thread
 
     /**
      * Initialize a new user's proverbs by adding them to the UsersProverbs hashmap
+     *
      * @param userId the userId
      */
     private void initializeUsersProverbs(String userId)
     {
         LinkedHashMap<String, Boolean> proverbIds = new LinkedHashMap<>();
-        for( JokeProverb proverb : Proverbs)
+        for (JokeProverb proverb : Proverbs)
         {
             proverbIds.put(proverb.getId(), false);
         }
@@ -243,14 +254,15 @@ class ClientWorker extends Thread
 
     /**
      * Get the next joke that hasnt been heard
+     *
      * @return the next joke that hasnt been heard
      */
     private String getNextJoke(String userId)
     {
-        String jokeId = "" ;
-        for( Map.Entry<String, Boolean> joke : UsersJokes.get(userId).entrySet() )
+        String jokeId = "";
+        for (Map.Entry<String, Boolean> joke : UsersJokes.get(userId).entrySet())
         {
-            if(!joke.getValue())
+            if (!joke.getValue())
             {
                 jokeId = joke.getKey();
                 break;
@@ -259,48 +271,49 @@ class ClientWorker extends Thread
 
         if (jokeId != "")
         {
-            UsersJokes.get(userId).replace( jokeId, true);
+            UsersJokes.get(userId).replace(jokeId, true);
         }
 
-        return jokeId ;
+        return jokeId;
     }
 
     /**
      * Get the next proverb that hasnt been heard
+     *
      * @return the next proverb that hasnt been heard
      */
     private String getNextProverb(String userId)
     {
-        String proverbId = "" ;
-        for( Map.Entry<String, Boolean> proverb : UsersProverbs.get(userId).entrySet() )
+        String proverbId = "";
+        for (Map.Entry<String, Boolean> proverb : UsersProverbs.get(userId).entrySet())
         {
-            if(!proverb.getValue())
+            if (!proverb.getValue())
             {
                 proverbId = proverb.getKey();
                 break;
             }
         }
 
-        if( proverbId != "")
+        if (proverbId != "")
         {
             UsersProverbs.get(userId).replace(proverbId, true);
         }
 
-        return proverbId ;
+        return proverbId;
     }
 
     private void shuffleJokes(String userId)
     {
         // All jokes have been heard so shuffle and reset
         // Another fairly inefficient process :(
-        ArrayList<String> jokeIds = new ArrayList<>(UsersJokes.get(userId).keySet()) ;
+        ArrayList<String> jokeIds = new ArrayList<>(UsersJokes.get(userId).keySet());
         Collections.shuffle(jokeIds);
 
         UsersJokes.get(userId).clear();
 
-        for( String jokeId : jokeIds)
+        for (String jokeId : jokeIds)
         {
-            UsersJokes.get(userId).put(jokeId,false);
+            UsersJokes.get(userId).put(jokeId, false);
         }
 
     }
@@ -309,26 +322,27 @@ class ClientWorker extends Thread
     {
         // All proverbs have been heard so shuffle and reset
         // Another fairly inefficient process thats repeated ahhhhh :(
-        ArrayList<String> proverbIds = new ArrayList<>(UsersProverbs.get(userId).keySet()) ;
+        ArrayList<String> proverbIds = new ArrayList<>(UsersProverbs.get(userId).keySet());
         Collections.shuffle(proverbIds);
 
         UsersProverbs.get(userId).clear();
-        for( String proverbId : proverbIds)
+        for (String proverbId : proverbIds)
         {
-            UsersProverbs.get(userId).put( proverbId, false);
+            UsersProverbs.get(userId).put(proverbId, false);
         }
     }
 
     /**
      * Lookup a Joke from the Joke Directory
+     *
      * @param jokeId The id of the joke to lookup
      * @return The joke
      */
     private String lookupJoke(String jokeId)
     {
-        for( JokeProverb joke : Jokes)
+        for (JokeProverb joke : Jokes)
         {
-            if( joke.getId() == jokeId)
+            if (joke.getId() == jokeId)
             {
                 return joke.getBody();
             }
@@ -338,14 +352,15 @@ class ClientWorker extends Thread
 
     /**
      * Lookup a Proverb from the Proverb Directory
+     *
      * @param proverbId The id of the proverb to lookup
      * @return The proverb
      */
     private String lookupProverb(String proverbId)
     {
-        for( JokeProverb proverb : Proverbs)
+        for (JokeProverb proverb : Proverbs)
         {
-            if( proverb.getId() == proverbId)
+            if (proverb.getId() == proverbId)
             {
                 return proverb.getBody();
             }
@@ -355,6 +370,7 @@ class ClientWorker extends Thread
 
     /**
      * Build the joke response to send to the client
+     *
      * @param userId the userId
      * @param jokeId the jokeId to lookup the joke
      * @return a String representing JokeId UserId Joke
@@ -366,7 +382,8 @@ class ClientWorker extends Thread
 
     /**
      * Build the proverb response to send to the client
-     * @param userId the userId
+     *
+     * @param userId    the userId
      * @param proverbId the proverbId to lookup the joke
      * @return a String representing ProverbId UserId Proverb
      */
@@ -400,7 +417,7 @@ class AdminWorker extends Thread
             // create an output stream on the specified socket
             out = new PrintStream(this.socket.getOutputStream());
             // create an input stream on the specified socket
-            in = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 
             try
             {
@@ -548,7 +565,7 @@ public class JokeServer
         }
 
         // We want to use a secondary server so start a new thread to allow multiple servers to run
-        if(useSecondaryServer)
+        if (useSecondaryServer)
         {
             try
             {

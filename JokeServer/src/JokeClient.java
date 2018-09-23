@@ -7,38 +7,32 @@
      Usage: java JokeClient [server address] [server address]
 
            Connect to 1 server only
-           java JokeClientlocalhost
+           java JokeClient localhost
 
            NOTE: Not implemented yet
            Start to 2 servers
            java jokeClient localhost localhost
 
     Instructions:
-    javac JokeClient
+    To Compile:
+    javac JokeClient.java
 ----------------------------------------------------------*/
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
 
 /**
  * The Joke Server client
  */
 public class JokeClient
 {
-     static String PrimaryServerAddress = "localhost";
-    static int PrimaryPort = 4545;
-    static String SecondaryServerAddress = "localhost";
-    static int SecondaryPort = 4546;
-
-
+    /**
+     * The main entry point of the JokeClient
+     * @param args The command Line Arguments
+     */
     public static void main(String args[])
     {
         if (args.length == 0)
@@ -49,57 +43,83 @@ public class JokeClient
             System.out.println("--------------------------------------------------------------------------\n");
         }
 
-        // Check if there were command line arguments supplied specifying the server address
+        // The default server address is localhost
+        String serverAddress = "localhost";
+
+        // Check if there is a command line argument supplied specifying the server address
         if (args.length == 1)
         {
-            PrimaryServerAddress = args[0];
+            serverAddress = args[0];
         }
 
         try
         {
-            // create a new admin client thread to listen on port 5050
-            PrimaryJokeClient primaryClientThread = new PrimaryJokeClient();
+            // create the primary client thread to listen on port 4545
+            JokeClientThread primaryClientThread = new JokeClientThread(4545, serverAddress);
             Thread aThread = new Thread(primaryClientThread);
             aThread.start();
         }
         catch (Exception e)
         {
-            System.out.println("Failed to create second client thread with exception: " + e);
+            System.out.println("Failed to create primary client thread. Exception: " + e);
         }
 
+        // Check if we want to start a secondary server connection
+        if (args.length == 2)
+        {
+            serverAddress = args[1];
+        }
+
+        try
+        {
+            // create a secondary client thread to listen on port 5050
+            JokeClientThread secondaryJokeClientThread = new JokeClientThread(4546, serverAddress);
+            Thread aThread = new Thread(secondaryJokeClientThread);
+            aThread.start();
+        }
+        catch (Exception e)
+        {
+            System.out.println("Failed to create second client thread. Exception: " + e);
+        }
     }
 }
 
-class PrimaryJokeClient implements Runnable
+/**
+ * The Joke Client thread to start up instances of the joke client
+ */
+class JokeClientThread implements Runnable
 {
+    private int port;
+    private String serverAddress;
+
+    /**
+     * Creates an instance of the JokeClientThread
+     *
+     * @param port          The port to use when starting the worker
+     * @param serverAddress The server address to use when starting the worker
+     */
+    JokeClientThread(int port, String serverAddress)
+    {
+        this.port = port;
+        this.serverAddress = serverAddress;
+    }
+
     public void run()
     {
         try
         {
-            new JokeClientWorker(JokeClient.PrimaryPort, JokeClient.PrimaryServerAddress).start();
+            new JokeClientWorker(this.port, this.serverAddress).start();
         }
         catch (Exception e)
         {
-            System.out.println("Failed to start client admin worker with exception: " + e);
+            System.out.println("Failed to start client admin worker for server " + this.serverAddress + ". Exception: " + e);
         }
     }
 }
 
-class SecondaryJokeClient implements Runnable
-{
-    public void run()
-    {
-        try
-        {
-            new JokeClientWorker(JokeClient.SecondaryPort, JokeClient.SecondaryServerAddress).start();
-        }
-        catch (Exception e)
-        {
-            System.out.println("Failed to start client admin worker with exception: " + e);
-        }
-    }
-}
-
+/**
+ * The Joke Client Worker
+ */
 class JokeClientWorker extends Thread
 {
     private int port;
@@ -107,6 +127,11 @@ class JokeClientWorker extends Thread
     private String userToken;
     private Socket client;
 
+    /**
+     * Joke Client Worker Constructor
+     * @param port The port to open a connection on
+     * @param serverAddress The server address to open a connection to
+     */
     JokeClientWorker(int port, String serverAddress)
     {
 
@@ -114,6 +139,9 @@ class JokeClientWorker extends Thread
         this.serverAddress = serverAddress;
     }
 
+    /**
+     * The threads run method
+     */
     public void run()
     {
         System.out.println("Tommy Leedberg's Joke Server Client, 1.8.\n");
@@ -124,10 +152,12 @@ class JokeClientWorker extends Thread
         {
             // Ask for the user credentials
             generateUserToken(in);
+
             String request;
             while (!(request = in.readLine()).contains("quit"))
             {
-                writeServerRequest( "GET");
+                // The server only accepts 1 command "GET" so we aren't worried about the input
+                writeServerRequest("GET");
             }
             System.out.println("Cancelled by user request.");
         }
@@ -137,29 +167,35 @@ class JokeClientWorker extends Thread
         }
     }
 
-    private  void generateUserToken( BufferedReader in)
+    /**
+     * Generate a user token( in this case it's a simple user name )
+     * @param in The buffered reader's input stream
+     */
+    private void generateUserToken(BufferedReader in)
     {
         try
         {
-            System.out.println( "What is your username?");
+            System.out.println("What is your username?");
             System.out.flush();
             this.userToken = in.readLine();
-            if(this.userToken.length() == 0)
+
+            if (this.userToken.length() == 0)
             {
-                System.out.println( "You must enter a valid username");
+                System.out.println("You must enter a valid username.");
                 this.generateUserToken(in);
             }
         }
-        catch (IOException ex)
+        catch (IOException e)
         {
-            System.out.println("Error reading username. Exception: " + ex);
+            System.out.println("Error reading username. Exception: " + e);
         }
     }
 
     /**
-     * Writes a request to the remote address
+     * Sends the command to the joke server
+     * @param commandString The command to send to the Joke Server
      */
-    private void writeServerRequest(String userRequest)
+    private void writeServerRequest(String commandString)
     {
         BufferedReader fromServer;
         PrintStream toServer;
@@ -167,19 +203,19 @@ class JokeClientWorker extends Thread
 
         try
         {
-            // Open a connection to server
-            if( !openConnection() )
+            // Open a connection to server, if you can't let the user know and wait for futher input
+            if (!openConnection())
             {
                 System.out.println("Waiting on Server Connection...");
                 return;
             }
 
-            ServerRequest request = new ServerRequest( userRequest, this.userToken );
+            ServerRequest request = new ServerRequest(commandString, this.userToken);
 
             // create an output stream on the specified socket
             toServer = new PrintStream(this.client.getOutputStream());
             // create an input stream on the specified socket
-            fromServer = new BufferedReader( new InputStreamReader(this.client.getInputStream()));
+            fromServer = new BufferedReader(new InputStreamReader(this.client.getInputStream()));
 
             // Send the joke server the command
             toServer.println(request.toString());
@@ -191,31 +227,34 @@ class JokeClientWorker extends Thread
                 System.out.println(textFromServer);
             }
         }
-        catch (IOException x)
+        catch (IOException e)
         {
-            System.out.println("Socket error.");
-            x.printStackTrace();
+            System.out.println("Socket error. Exception: " + e);
+            e.printStackTrace();
         }
     }
+
     /**
-     * Open a new connection on the requested server address and port
+     * Open a new connection to the server on the specified port
      * due to limitations on files code is duplicated
-     * @return
+     *
+     * @return A value indicating whether or not a connection was able to be made
      */
-    private  Boolean openConnection()
+    private Boolean openConnection()
     {
         try
         {
             this.client = new Socket(this.serverAddress, this.port);
             return true;
         }
-        catch (UnknownHostException ex)
+        catch (UnknownHostException e)
         {
-            System.out.println("Invalid Host exception " + ex);
+            System.out.println("Invalid Host. Exception " + e);
             return false;
         }
-        catch (IOException ex)
+        catch (IOException e)
         {
+            System.out.println( "Failed to connect to socket. Exception: " + e);
             return false;
         }
     }
