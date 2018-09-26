@@ -65,7 +65,7 @@ public class JokeClientAdmin
         }
 
         // Check if we want to start a secondary server connection
-        if (args.length == 2)
+       /* if (args.length == 2)
         {
             serverAddress = args[1];
         }
@@ -80,7 +80,7 @@ public class JokeClientAdmin
         catch (Exception e)
         {
             System.out.println("Failed to create second admin client thread. Exception: " + e);
-        }
+        }*/
     }
 }
 
@@ -155,6 +155,11 @@ class AdminClientWorker extends Thread
                 System.out.print("What mode would you like to put the JokeServer in? (JOKE_MODE, PROVERB_MODE)");
                 System.out.flush();
                 command = in.readLine();
+
+                if (command.contains("quit"))
+                {
+                    continue;
+                }
 
                 // If the connection isn't available yet do not try to send a message.
                 if (!openConnection())

@@ -16,6 +16,8 @@
     Instructions:
     To Compile:
     javac JokeServer.java
+
+    NOTE: JokeServer must be compiled first!
 ----------------------------------------------------------*/
 import java.io.BufferedReader;
 import java.io.IOException;

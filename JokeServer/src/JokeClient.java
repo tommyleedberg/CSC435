@@ -70,7 +70,7 @@ public class JokeClient
             serverAddress = args[1];
         }
 
-        try
+        /*try
         {
             // create a secondary client thread to listen on port 5050
             JokeClientThread secondaryJokeClientThread = new JokeClientThread(4546, serverAddress);
@@ -80,7 +80,7 @@ public class JokeClient
         catch (Exception e)
         {
             System.out.println("Failed to create second client thread. Exception: " + e);
-        }
+        }*/
     }
 }
 
