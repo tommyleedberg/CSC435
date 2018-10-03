@@ -1,0 +1,94 @@
+-------------------------------------------------------
+Usage: java WebServer
+-------------------------------------------------------
+
+Tommy Leedberg's WebServer 1.8 starting up
+Listening for the admin client on port 2540.
+Client Connected
+GET /dog.txt HTTP/1.1
+Host: localhost:2540
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+
+-------------------------------------------------------
+Usage: java WebServer
+-------------------------------------------------------
+
+Tommy Leedberg's WebServer 1.8 starting up
+Listening for the admin client on port 2540.
+Client Connected
+GET /cat.html HTTP/1.1
+Host: localhost:2540
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+
+The following requests were made while capturing web traffic utilizing Fiddler
+Dog.txt
+
+REQUEST:
+GET http://condor.depaul.edu/elliott/dog.txt HTTP/1.1
+Host: condor.depaul.edu
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+
+
+RESPONSE:
+HTTP/1.1 200 OK
+Date: Wed, 03 Oct 2018 04:05:11 GMT
+Server: Apache/2.2.3 (Red Hat)
+Last-Modified: Wed, 07 Oct 2015 20:29:55 GMT
+ETag: "8a1bfc-30-521899bff76c0"
+Accept-Ranges: bytes
+Content-Length: 48
+Content-Type: text/plain
+Connection: close
+
+This is Elliott's dog file on condor. Good job!
+
+Cat.html
+REQUEST:
+GET http://condor.depaul.edu/elliott/cat.html HTTP/1.1
+Host: condor.depaul.edu
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+
+
+
+RESPONSE:
+HTTP/1.1 200 OK
+Date: Wed, 03 Oct 2018 04:04:28 GMT
+Server: Apache/2.2.3 (Red Hat)
+Last-Modified: Mon, 05 Oct 2009 20:35:03 GMT
+ETag: "8a1bed-78-475360c5dcbc0"
+Accept-Ranges: bytes
+Content-Length: 120
+Content-Type: text/html
+Connection: close
+
+<html> <body>
+<center>
+
+<h1> This is Elliott's </h1>
+
+<h1>  CAT </h1>
+
+<h1> html file </h1>
+
+</center>
+<body> </html>
