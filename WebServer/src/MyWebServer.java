@@ -15,7 +15,6 @@
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -33,6 +32,8 @@ enum MessageType
     class MessageReceiver extends Thread
     {
         private Socket socket;
+        private static String workingDir = ".";
+        private static String homePage = "/";
 
         MessageReceiver(Socket s)
         {
@@ -45,9 +46,7 @@ enum MessageType
 
             DataOutputStream out = null;
             BufferedReader in = null;
-
-            File folder = new File(".");
-            File[] filesInPath = folder.listFiles();
+            File folder = null;
 
             try
             {
@@ -63,26 +62,36 @@ enum MessageType
                     if (incoming != null)
                     {
                         System.out.println(incoming);
-                        if(incoming.contains("GET / HTTP/1.1"))
-                        {
-                            String directoryStructure = "<html><body>";
+                        String directoryStructure = "<html><body>";
 
-                            for( File file : filesInPath)
-                            {
-                                System.out.println(file.getPath());
-                                directoryStructure += "<a href=\"" + file.getPath() + "\"> " + file.getName() + "</a></br>";
-                            }
-                            directoryStructure += "<body></html>";
+                        // create a home page button to make traversing the directories a little easier
+                        if( incoming.compareToIgnoreCase("GET / HTTP/1.1") == 0)
+                        {
+                            workingDir = ".";
+                            folder = new File(".");
+                        }
+                        else
+                        {
+                            folder = new File(workingDir);
+                        }
+
+                        File[] filesInPath = folder.listFiles();
+
+                        if(incoming.compareToIgnoreCase("GET / HTTP/1.1") == 0)
+                        {
+
+                            String directoryHTML = this.GenerateDirectoryHTML(filesInPath, directoryStructure);
 
                             try
                             {
-                                WriteHeaderResponse(out, directoryStructure.length(), MessageType.HTML);
-                                out.writeBytes(directoryStructure);
+                                WriteHeaderResponse(out, directoryHTML.length(), MessageType.HTML);
+                                out.writeBytes(directoryHTML);
                             }
                             catch( IOException ex)
                             {
                                 System.out.println("Error opening i/o pipe on the specified socket: " + ex);
                             }
+
                         }
                         else if( incoming.contains("POST") || incoming.contains("PUT") || incoming.contains("DELETE"))
                         {
@@ -92,23 +101,49 @@ enum MessageType
                         else
                         {
                             //Get the actual request and determine if the user is looking for a file that we have locally
-                            String req = incoming.substring(5, incoming.length()-9).trim();
+                            String req = incoming.substring(3, incoming.length()-9).trim();
+                            req = "." + req.replace('/', '\\');
+
                             for(File file : filesInPath)
                             {
-                                if(file.getName().contains(req))
+                                // check the files to see if we have a file name match with the request
+                                if(file.getPath().compareToIgnoreCase(req) == 0)
                                 {
-                                    System.out.println( "Request for file " + req + " has been made");
-                                    String ext = file.getName().substring(file.getName().lastIndexOf("."));
-                                    if( ext.equalsIgnoreCase(".txt") || ext.equalsIgnoreCase(".java"))
+                                    // if the request is for a directory, rebuild the html for all files under that directory
+                                    if(file.isDirectory())
                                     {
-                                        WriteHeaderResponse(out, file.length(), MessageType.TEXT);
-                                    }
-                                    else if( ext.equalsIgnoreCase(".html"))
-                                    {
-                                        WriteHeaderResponse(out, file.length(), MessageType.HTML);
+                                        workingDir = file.getPath();
+                                        System.out.println("Request for directory " + req + " has been made");
+                                        String directoryHTML = this.GenerateDirectoryHTML(file.listFiles(), directoryStructure);
 
+                                        try
+                                        {
+                                            WriteHeaderResponse(out, directoryHTML.length(), MessageType.HTML);
+                                            out.writeBytes(directoryHTML);
+                                        }
+                                        catch( IOException ex)
+                                        {
+                                            System.out.println("Error opening i/o pipe on the specified socket: " + ex);
+                                        }
                                     }
-                                    out.writeBytes(new String(Files.readAllBytes(Paths.get(file.getPath()))));
+                                    else
+                                    {
+                                        System.out.println("Request for file " + req + " has been made");
+                                        String ext = file.getName().substring(file.getName().lastIndexOf("."));
+                                        if (ext.equalsIgnoreCase(".txt") || ext.equalsIgnoreCase(".java"))
+                                        {
+                                            WriteHeaderResponse(out, file.length(), MessageType.TEXT);
+                                        }
+                                        else if (ext.equalsIgnoreCase(".html"))
+                                        {
+                                            WriteHeaderResponse(out, file.length(), MessageType.HTML);
+
+                                        }
+                                        out.writeBytes(new String(Files.readAllBytes(Paths.get(file.getPath()))));
+                                    }
+
+                                    // no reason to continue in this loop we found what we're looking for
+                                    break;
                                 }
                             }
                         }
@@ -122,6 +157,7 @@ enum MessageType
                 finally
                 {
                     this.socket.close();
+                    out.flush();
                     out.close();
                     in.close();
                 }
@@ -160,6 +196,18 @@ enum MessageType
            {
                System.out.println( "Failed to write headers to client. Exception: " +ex);
            }
+        }
+
+        private String GenerateDirectoryHTML(File[] filesInPath, String directoryStructure )
+        {
+            for( File file : filesInPath)
+            {
+                System.out.println(file.getPath());
+                directoryStructure += "<a href=\"" + file.getPath().replaceFirst(".", "") + "\"> " + file.getName() + "</a><br>";
+            }
+            directoryStructure += "<br><br><a href=\"" + homePage + "\">Home<body></html>";
+
+            return directoryStructure;
         }
     }
 
