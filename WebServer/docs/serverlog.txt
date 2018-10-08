@@ -1,0 +1,71 @@
+PS D:\School\CSC435\WebServer\src> java MyWebServer
+
+-------------------------------------------------------
+Usage: java WebServer
+-------------------------------------------------------
+
+Tommy Leedberg's WebServer 1.8 starting up
+Listening for the admin client on port 2540.
+Client Connected
+Incoming request from client: GET / HTTP/1.1
+.\MessageReceiver$1.class
+.\MessageReceiver.class
+.\MessageType.class
+.\MyWebServer.class
+.\MyWebServer.java
+.\SocketListener.class
+Client Connected
+Client Connected
+Client Connected
+Client Connected
+Client Connected
+Client Connected
+Client Connected
+Client Connected
+Client Connected
+Client Connected
+Client Connected
+Client Connected
+Incoming request from client: GET / HTTP/1.1
+.\MessageReceiver$1.class
+.\MessageReceiver.class
+.\MessageType.class
+.\MyWebServer.class
+.\MyWebServer.java
+.\SocketListener.class
+Client Connected
+Client Connected
+Incoming request from client: GET / HTTP/1.1
+.\MessageReceiver$1.class
+.\MessageReceiver.class
+.\MessageType.class
+.\MyWebServer.class
+.\MyWebServer.java
+.\SocketListener.class
+Client Connected
+Incoming request from client: GET / HTTP/1.1
+.\addnums.html
+.\cat.html
+.\dog.txt
+.\MessageReceiver$1.class
+.\MessageReceiver.class
+.\MessageType.class
+.\MyWebServer.class
+.\MyWebServer.java
+.\SocketListener.class
+Client Connected
+Incoming request from client: GET /cat.html HTTP/1.1
+Request for file .\cat.html has been made
+Client Connected
+Client Connected
+Incoming request from client: GET /dog.txt HTTP/1.1
+Request for file .\dog.txt has been made
+Client Connected
+Incoming request from client: GET /MyWebServer.java HTTP/1.1
+Request for file .\MyWebServer.java has been made
+Client Connected
+Client Connected
+Incoming request from client: GET /addnums.html HTTP/1.1
+Request for file .\addnums.html has been made
+Client Connected
+Incoming request from client: GET /cgi/addnums.fake-cgi?person=Tommy&num1=48&num2=554 HTTP/1.1
