@@ -18,65 +18,479 @@ import com.google.gson.annotations.SerializedName;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
+ * A singleton for the Utilities class
+ */
+class Utilities
+{
+    private static KeyManager KeyManager = null;
+
+    public static KeyManager GetKeyManager()
+    {
+        return KeyManager;
+    }
+
+    public static void SetKeyManager( KeyManager keyManager)
+    {
+        KeyManager = keyManager;
+    }
+
+    /**
+     * Read in the input file and deserialize it into a block record
+     *
+     * @param fileName  the file path to read in
+     * @param processId The current processes process Id
+     * @return a list of all records in the file
+     */
+    public static ArrayList<BlockRecord> ReadInputFile(String fileName, int processId)
+    {
+        ArrayList<BlockRecord> blockRecords = new ArrayList();
+        String currentPID = Integer.toString(processId);
+
+        // read through the input file setting each of the BlockRecord fields
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName)))
+        {
+
+            String inputLine;
+            while ((inputLine = br.readLine()) != null)
+            {
+                BlockRecord record = new BlockRecord();
+
+                /** Header information for the block **/
+                record.setBlockID(new String(UUID.randomUUID().toString()));
+                record.setCreatingProcess(currentPID);
+
+                // split the input line by 1 or more spaces into a delimited array
+                String[] inputData = inputLine.split(" +");
+
+                /** Patient information for the block **/
+                // every input file has the same ordering on the data points so we can hard code their index's
+                record.setSSNum(inputData[0]);
+                record.setFirstName(inputData[1]);
+                record.setLastName(inputData[2]);
+                record.setDateOfBirth(inputData[3]);
+                record.setDiagnosis(inputData[4]);
+                record.setTreatment(inputData[5]);
+                record.setMedication(inputData[6]);
+
+                // in order to finish the block we have to serialize it, sign it, and then update the block
+                String SHA256String = SerializeRecord(record);
+
+                // Sign the block and then Base64 Encode the resulting byte[] into a string
+                record.setSHA256String(SHA256String);
+                String signedBlock = Base64.getEncoder().encodeToString(KeyManager.SignData(SHA256String.getBytes()));
+                record.setSignedSHA256(signedBlock);
+
+                blockRecords.add(record);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.err.println("Error while reading input text file" + ex);
+        }
+
+        // Print out all the names from the records collected
+        System.out.println(blockRecords.size() + " records read.");
+        System.out.println("Names from input:");
+        for (BlockRecord record : blockRecords)
+        {
+            System.out.println("\t" + record.getFirstName() + " " + record.getLastName());
+        }
+        System.out.println("\n");
+
+        System.out.println(blockRecords);
+
+        return blockRecords;
+    }
+
+    /**
+     * Serialize a list of block records
+     *
+     * @param blockRecords The list of block records to serialize
+     */
+    public static String SerializeRecord(ArrayList<BlockRecord> blockRecords)
+    {
+        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        return gson.toJson(blockRecords);
+    }
+
+    /**
+     * Serialize a single block record
+     * <p>
+     * * @param blockRecord The block record to serialize
+     */
+    public static String SerializeRecord(BlockRecord blockRecord)
+    {
+        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        return gson.toJson(blockRecord);
+    }
+
+    /**
+     * Send the unverified block to all unverified block ports
+     *
+     * @param unverifiedBlockPorts A list of the unverified block ports
+     * @param unverifiedBlock      An unverified block
+     */
+    public static void SendUnverifiedBlocks(int[] unverifiedBlockPorts, ArrayList<BlockRecord> unverifiedBlock)
+    {
+        Socket sock;
+        PrintStream toServer;
+
+        try
+        {
+            // A serialized representation of the block to be sent
+            String blockToSend;
+
+            // Special condition for startup so all processes have a dummy block
+            if (unverifiedBlock == null)
+            {
+                BlockRecord record = new BlockRecord();
+                /** Header information for the block **/
+                record.setBlockID(UUID.randomUUID().toString());
+                record.setCreatingProcess(Integer.toString(BlockChain.PID));
+
+                // in order to finish the block we have to serialize it, sign it, and then update the block
+                String SHA256String = SerializeRecord(record);
+
+                // Sign the block and then Base64 Encode the resulting byte[] into a string
+                record.setSHA256String(SHA256String);
+
+                String signedBlock = Base64.getEncoder().encodeToString(KeyManager.SignData(SHA256String.getBytes()));
+                record.setSignedSHA256(signedBlock);
+
+                blockToSend = SerializeRecord(record);
+            }
+            else
+            {
+                blockToSend = SerializeRecord(unverifiedBlock);
+            }
+
+            // send the generated block to each process
+            for (int i = 0; i < unverifiedBlockPorts.length; i++)
+            {
+                sock = new Socket(BlockChain.ServerName, unverifiedBlockPorts[i]);
+                toServer = new PrintStream(sock.getOutputStream());
+                toServer.println(blockToSend);
+                toServer.flush();
+                toServer.close();
+                sock.close();
+            }
+        }
+        catch (Exception ex)
+        {
+            System.err.println("Error while sending unverified block " + ex);
+        }
+    }
+
+    /**
+     * Send the public key to the Public Key Server port for each process
+     *
+     * @param keyServerPorts The ports of the key servers
+     */
+    public static void SendKeys(int[] keyServerPorts)
+    {
+        Socket socket;
+        ObjectOutputStream toServer;
+
+        // If we're going to send the keys() then send them to every process and then return
+        for (int i = 0; i < keyServerPorts.length; i++)
+        {
+            // wrapping the try catch inside the for loop will stop the process from failing completely if it cant
+            // send to a single process for some reason
+            try
+            {
+                // Send the public key to all of the running processes key server ports
+                socket = new Socket(BlockChain.ServerName, keyServerPorts[i]);
+                toServer = new ObjectOutputStream(socket.getOutputStream());
+
+                toServer.writeObject(KeyManager.GetPublicKey());
+
+                toServer.flush();
+                toServer.close();
+                socket.close();
+                return;
+            }
+            catch (IOException ex)
+            {
+                System.err.println("Failed to send public keys to process: " + i + "with exception: " + ex);
+            }
+        }
+    }
+}
+
+/**
+ * The KeyManager class for generating the public/private key pair and also
+ * signing and verifying the blocks of data
+ */
+class KeyManager
+{
+    private KeyPair keyPair = null;
+    private PublicKey publicKey = null;
+    private PrivateKey privateKey = null;
+    private Signature signer = null;
+
+    /**
+     * The KeyManager class used to generate, sign, and verify keys
+     */
+    public KeyManager(PublicKey publicKey)
+    {
+        String signatureAlgorithm = "SHA1withRSA";
+
+        try
+        {
+            this.signer = Signature.getInstance(signatureAlgorithm);
+        }
+        catch (NoSuchAlgorithmException ex)
+        {
+            System.err.println("Invalid encryption algorithm supplied for signature" + ex);
+        }
+
+        // This constructor is for services that will only be using the public key
+        this.publicKey = publicKey;
+
+    }
+
+    /**
+     * The KeyManager class used to generate, sign, and verify keys
+     */
+    public KeyManager()
+    {
+        String signatureAlgorithm = "SHA1withRSA";
+
+        try
+        {
+            // A seed was provided so this call is going to create the kv pair and
+            // keep a copy of the private key
+            this.signer = Signature.getInstance(signatureAlgorithm);
+        }
+        catch (NoSuchAlgorithmException ex)
+        {
+            System.err.println("Invalid encryption algorithm supplied for keypair generation" + ex);
+        }
+    }
+
+    /**
+     * Generate the public/private key pair to be used with signing/verification
+     *
+     * @param randomSeed
+     */
+    public void GenerateKeyPair(long randomSeed)
+    {
+        String encryptionAlgorithm = "RSA";
+        String hashingAlgorithm = "SHA1PRNG";
+        String hashAlgorithmProvider = "SUN";
+
+        // NOTE: this method should only be called by the last process in this project
+        // as I only want to generate a key pair once then the public key will be shared
+        // and identical for all processes
+        try
+        {
+            // A seed was provided so this call is going to create the kv pair and
+            // keep a copy of the private key
+
+            KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance(encryptionAlgorithm);
+            SecureRandom rng = SecureRandom.getInstance(hashingAlgorithm, hashAlgorithmProvider);
+            rng.setSeed(randomSeed);
+            keyGenerator.initialize(1024, rng);
+
+            this.keyPair = keyGenerator.generateKeyPair();
+            this.publicKey = keyPair.getPublic();
+            this.privateKey = keyPair.getPrivate();
+
+        }
+        catch (NoSuchAlgorithmException ex)
+        {
+            System.err.println("Invalid encryption algorithm supplied for keypair generation\n" + ex);
+        }
+        catch (NoSuchProviderException ex)
+        {
+            System.err.println("Invalid hash algorithm provider supplied for keypair generation\n" + ex);
+        }
+    }
+
+    /**
+     * Get the public key for the Key pair
+     *
+     * @return the public key of the key pair
+     */
+    public PublicKey GetPublicKey()
+    {
+        return this.publicKey;
+    }
+
+    /**
+     * Sign the data with the private key
+     *
+     * @param unsignedData The data to be signed
+     * @return the signed data or null if an exception occured
+     */
+    public byte[] SignData(byte[] unsignedData)
+    {
+        try
+        {
+            this.signer.initSign(this.privateKey);
+            this.signer.update(unsignedData);
+            return this.signer.sign();
+        }
+        catch (SignatureException ex)
+        {
+            System.err.println("Signature error while trying to sign the data block\n" + ex);
+            return null;
+        }
+        catch (InvalidKeyException ex)
+        {
+            System.err.println("Invalid key exception while trying to sign the data block\n" + ex);
+            return null;
+        }
+    }
+
+    /**
+     * Validate that the signed data matches the unsigned data once using
+     * the public key
+     *
+     * @param unsignedData The unsigned data to use for verification
+     * @param signedData   The data that has been signed with the private key
+     * @return A value indicating whether or not the data has been signed by
+     * the private key
+     */
+    public boolean VerifySignature(byte[] unsignedData, byte[] signedData)
+    {
+        try
+        {
+            this.signer.initVerify(this.publicKey);
+            this.signer.update(unsignedData);
+
+            return this.signer.verify(signedData);
+        }
+        catch (SignatureException ex)
+        {
+            System.err.println("Signature error while trying to verify the data block\n" + ex);
+            return false;
+        }
+        catch (InvalidKeyException ex)
+        {
+            System.err.println("Invalid key exception while trying to verify the data block\n" + ex);
+            return false;
+        }
+    }
+
+}
+
+/**
  * Class representing the ports used for each process
  */
 class Ports
 {
-    private int KeyServerPortBase = 4710;
-    private int UnverifiedBlockServerPortBase = 4820;
-    private int BlockChainServerPortBase = 4930;
+    private static int KeyServerPortBase = 4710;
+    private static int UnverifiedBlockServerPortBase = 4820;
+    private static int BlockChainServerPortBase = 4930;
 
-    private int KeyServerPort;
-    private int UnverifiedBlockServerPort;
-    private int BlockChainServerPort;
+    private static int[] KeyServerPortsInUse;
+    private static int[] UnverifiedBlockServerPortsInUse;
+    private static int[] BlockChainServerPortsInUse;
+
+    private static int KeyServerPort;
+
+    private static int UnverifiedBlockServerPort;
+    private static int BlockChainServerPort;
+
+    /**
+     * The ports constructor
+     *
+     * @param runningProcessCount the number of running processes
+     */
+    public static void setPortsForAllProcesses(int runningProcessCount)
+    {
+        // this is helpful because every process will know all running ports that are in use by the service
+        for (int i = 0; i < runningProcessCount; ++i)
+        {
+            KeyServerPortsInUse[i] = KeyServerPortBase + i;
+            UnverifiedBlockServerPortsInUse[i] = UnverifiedBlockServerPortBase + i;
+            BlockChainServerPortsInUse[i] = BlockChainServerPortBase + i;
+        }
+    }
 
     /**
      * Set the ports for each of the process types by incrementing the processId to the base value
      *
-     * @param processId the process id
+     * @param processId the process id for this process
      */
-    public void setPorts(int processId)
+    public static void setPortsForCurrentProcess(int processId)
     {
-        this.KeyServerPort = this.KeyServerPortBase + processId;
-        this.UnverifiedBlockServerPort = this.UnverifiedBlockServerPortBase + processId;
-        this.BlockChainServerPort = this.BlockChainServerPortBase + processId;
+        KeyServerPort = KeyServerPortBase + processId;
+        UnverifiedBlockServerPort = UnverifiedBlockServerPortBase + processId;
+        BlockChainServerPort = BlockChainServerPortBase + processId;
     }
 
     /**
-     * Get teh KeyServerPort
+     * Get the Key Server Port for this process
      *
-     * @return The Key Server Port
+     * @return The Key Server Port for the current process
      */
-    public int getKeyServerPort()
+    public static int getKeyServerPort()
     {
         return KeyServerPort;
     }
 
     /**
-     * Get the UnverifiedBlockServerPort
+     * Get the current processes unverified block server port
      *
-     * @return The Unverified Block Server Port
+     * @return The current processes unverified block server port
      */
-    public int getUnverifiedBlockServerPort()
+    public static int getUnverifiedBlockServerPort()
     {
         return UnverifiedBlockServerPort;
     }
 
     /**
-     * Get teh BlockChain Port
+     * Get the current processes block chain server port
      *
-     * @return The BlockChain port
+     * @returnThe current processes block chain server port
      */
-    public int getBlockChainServerPort()
+    public static int getBlockChainServerPort()
     {
         return BlockChainServerPort;
+    }
+
+    /**
+     * Gets a list of the Key Server Ports that are in use
+     *
+     * @return A list of the key server ports in use
+     */
+    public static int[] getKeyServerPortsInUse()
+    {
+        return KeyServerPortsInUse;
+    }
+
+    /**
+     * Gets a list of the Unverified Block Server Ports that are in use
+     *
+     * @return A list of the unverified block ports in use
+     */
+    public static int[] getUnverifiedBlockServerPortsInUse()
+    {
+        return UnverifiedBlockServerPortsInUse;
+    }
+
+    /**
+     * Gets a list of the Block Chain Ports that are in use
+     *
+     * @return A list of the block chain ports in use
+     */
+    public static int[] getBlockChainServerPortsInUse()
+    {
+        return BlockChainServerPortsInUse;
     }
 }
 
@@ -85,44 +499,50 @@ class Ports
  */
 class BlockRecord
 {
-    @SerializedName (value = "SHA256String")
-    private String SHA256String;
+    // only used to get a readable date format
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 
-    @SerializedName (value = "SignedSHA256")
-    private String SignedSHA256;
+    @SerializedName(value = "SHA256String")
+    private String SHA256String = "SHA256 String";
 
-    @SerializedName (value = "BlockId")
-    private String BlockId;
+    @SerializedName(value = "SignedSHA256")
+    private String SignedSHA256 = "Signed SHA256 String";
 
-    @SerializedName (value = "VerificationProcessId")
-    private String VerificationProcessId;
+    @SerializedName(value = "SHA256String")
+    private String TimeStamp = dateFormat.format(new Date());
 
-    @SerializedName (value = "CreatingProcess")
-    private String CreatingProcess;
+    @SerializedName(value = "BlockId")
+    private String BlockId = "";
 
-    @SerializedName (value = "PreviousHash")
-    private String PreviousHash;
+    @SerializedName(value = "VerificationProcessId")
+    private String VerificationProcessId = "";
 
-    @SerializedName (value = "FirstName")
-    private String FirstName;
+    @SerializedName(value = "CreatingProcess")
+    private String CreatingProcess = "";
 
-    @SerializedName (value = "LastName")
-    private String LastName;
+    @SerializedName(value = "PreviousHash")
+    private String PreviousHash = "";
 
-    @SerializedName (value = "SSN", alternate = {"SocialSecurityNumber"})
-    private String SocialSecurityNumber;
+    @SerializedName(value = "FirstName")
+    private String FirstName = "";
 
-    @SerializedName (value = "DOB", alternate = {"DateOfBirth"})
-    private String DateOfBirth;
+    @SerializedName(value = "LastName")
+    private String LastName = "";
 
-    @SerializedName (value = "Diagnosis")
-    private String Diagnosis;
+    @SerializedName(value = "SSN", alternate = {"SocialSecurityNumber"})
+    private String SocialSecurityNumber = "";
 
-    @SerializedName (value = "Treatment")
-    private String Treatment;
+    @SerializedName(value = "DOB", alternate = {"DateOfBirth"})
+    private String DateOfBirth = "";
 
-    @SerializedName (value = "Medication")
-    private String Medication;
+    @SerializedName(value = "Diagnosis")
+    private String Diagnosis = "";
+
+    @SerializedName(value = "Treatment")
+    private String Treatment = "";
+
+    @SerializedName(value = "Medication")
+    private String Medication = "";
 
 
     /**
@@ -300,12 +720,12 @@ class UnverifiedBlockConsumer implements Runnable
 
 	/* With duplicate blocks that have been verified by different procs ordinarily we would keep only the one with
            the lowest verification timestamp. For the exmple we use a crude filter, which also may let some dups through */
-                if (BlockChain.Blockchain.indexOf(data.substring(1, 9)) < 0)
+                if (BlockChain.RecordBlockChain.indexOf(data.substring(1, 9)) < 0)
                 {
                     // Crude, but excludes most duplicates.
                     fakeVerifiedBlock = "[" + data + " verified by P" + BlockChain.PID + " at time " + Integer.toString(ThreadLocalRandom.current().nextInt(100, 1000)) + "]\n";
                     System.out.println(fakeVerifiedBlock);
-                    String tempChain = fakeVerifiedBlock + BlockChain.Blockchain; // add the verified block to the chain
+                    String tempChain = fakeVerifiedBlock + BlockChain.RecordBlockChain; // add the verified block to the chain
                     for (int i = 0; i < BlockChain.ProcessCount; i++)
                     {
                         // send to each process in group, including us:
@@ -375,7 +795,8 @@ class UnverifiedBlockWorker extends Thread
 }
 
 /**
- * The Public Key worker class
+ * The Public Key worker class listens for the public key and then creates the KeyManager if it doesnt already have a
+ * publicKey
  */
 class PublicKeyWorker extends Thread
 {
@@ -388,18 +809,29 @@ class PublicKeyWorker extends Thread
 
     public void run()
     {
-        System.out.println("Block Chain Client Connected");
+        System.out.println("Public Key Client Connected");
 
-        BufferedReader in = null;
+        ObjectInputStream in;
+        ObjectOutputStream out;
+
         try
         {
             // create an input stream on the specified socket
-            in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+            in = new ObjectInputStream(this.socket.getInputStream());
+
+            // TODO: Use the output stream to send an ack that we got the public key
+            out = new ObjectOutputStream(this.socket.getOutputStream());
 
             try
             {
-                String data = in.readLine();
-                System.out.println("Got key: " + data);
+                // this is in no way, shape, or form secure but for this assignment it's fine
+                PublicKey publicKey = (PublicKey) in.readObject();
+                System.out.println("Got key: " + publicKey.toString());
+
+                if (Utilities.GetKeyManager() == null)
+                {
+                    Utilities.SetKeyManager(new KeyManager(publicKey));
+                }
             }
             catch (Exception e)
             {
@@ -410,6 +842,8 @@ class PublicKeyWorker extends Thread
             {
                 this.socket.close();
                 in.close();
+                out.flush();
+                out.close();
             }
         }
         catch (IOException e)
@@ -417,6 +851,7 @@ class PublicKeyWorker extends Thread
             System.out.println("Error opening i/o pipe on the specified socket: " + e);
         }
     }
+
 }
 
 /**
@@ -585,11 +1020,13 @@ class PublicKeyThread implements Runnable
  */
 public class BlockChain
 {
-    public static final String ServerName = "localhost";
     public static final int ProcessCount = 3;
     public static final int PID = 0;
-    public static String Blockchain = "[First block]";
-    private static final int WaitTimeInMSec = 1000;
+    public static final String ServerName = "localhost";
+
+    // The actual block chain object
+    public static String RecordBlockChain = "[First block]";
+    public static int ProcessId = 0;
 
     /**
      * The main entry point of the block chain program
@@ -598,8 +1035,12 @@ public class BlockChain
      */
     public static void main(String args[])
     {
-        int processId = 0;
+        // Create the queue that will be used to hold unverified blocks
+        final BlockingQueue<String> queue = new PriorityBlockingQueue<>();
+
         String inputFileName;
+        // Create the ports object to store the port information about all ports in use as well as the ports per process
+        Ports.setPortsForAllProcesses(ProcessCount);
 
         if (args.length == 0)
         {
@@ -610,10 +1051,10 @@ public class BlockChain
         }
         else
         {
-            processId = Integer.parseInt(args[0]);
+            ProcessId = Integer.parseInt(args[0]);
         }
 
-        switch (processId)
+        switch (ProcessId)
         {
             case 1:
             {
@@ -622,7 +1063,15 @@ public class BlockChain
             }
             case 2:
             {
+                // Process 2 is the last process and is a little special, it will multi-cast the public keys
+                // which means it also needs to generate the key pair
                 inputFileName = "BlockInput2.txt";
+
+                // Create the key manager, generate the key pair, then set up the utilities class
+                KeyManager = new KeyManager();
+                KeyManager.GenerateKeyPair(1000);
+                Utilities.SetKeyManager(KeyManager);
+                Utilities.SendKeys(ports.getKeyServerPortsInUse());
                 break;
             }
             default:
@@ -632,163 +1081,48 @@ public class BlockChain
             }
         }
 
-        // Create the ports object to store the port information per process
-        Ports ports = new Ports();
-        ports.setPorts(processId);
+        // Set the ports for this process
+        ports.setPorts(ProcessId);
 
-        // Create the queue that will be used to hold unverified blocks
-        final BlockingQueue<String> queue = new PriorityBlockingQueue<>();
-
-        System.out.println("Process number: " + processId + " Ports:");
+        System.out.println("Process number: " + ProcessId + " Ports:");
         System.out.println("\t\t Public Keys Port: " + ports.getKeyServerPort());
         System.out.println("\t\t UnverifiedBlocksPort: " + ports.getUnverifiedBlockServerPort());
         System.out.println("\t\t BlockChainPort: " + ports.getBlockChainServerPort());
 
         System.out.println("\nUsing input file: " + inputFileName + "\n");
-        ReadInputFile(inputFileName, processId);
 
-        // Start the block chain, unverified blocks, and public keys servers
+        // Start the block chain, unverified blocks, and public keys servers as well as the UnverifiedBlock consumer
         try
         {
             new Thread(new BlockChainThread(ports.getBlockChainServerPort())).start();
             new Thread(new PublicKeyThread(ports.getKeyServerPort())).start();
             new Thread(new UnverifiedBlockThread(ports.getUnverifiedBlockServerPort(), queue)).start();
-
+            new Thread(new UnverifiedBlockConsumer(ports.getBlockChainServerPort(), queue)).start();
         }
         catch (Exception e)
         {
-            System.out.println("Failed to create client admin thread with exception: " + e);
+            System.out.println("Failed to start server thread with exception: " + e);
         }
 
-        // Wait for servers to start.
         try
         {
-            Thread.sleep(WaitTimeInMSec);
+            // Block each process until a public key is available this should signify all the servers are up and running
+            while (KeyManager == null)
+            {
+                Thread.sleep(1000);
+            }
         }
         catch (Exception e)
         {
             System.out.println("Error while sleeping");
         }
 
-        // Wait for multicast to fill incoming queue for our example.
-        MultiCast(ports); //
-        try
+
+        // Now that all the servers on each process should be running let process 2 send out the initial unverified block
+        if (ProcessId == 2)
         {
-            Thread.sleep(WaitTimeInMSec);
+            Utilities.SendUnverifiedBlocks(ports.getUnverifiedBlockServerPortsInUse(), null);
         }
-        catch (Exception e)
-        {
-        }
-
-        new Thread(new UnverifiedBlockConsumer(ports.getBlockChainServerPort(), queue)).start(); // Start consuming the queued-up unverified blocks
-    }
-
-    private static void MultiCast(Ports ports)
-    {
-        // Multicast some data to each of the processes.
-        Socket sock;
-        PrintStream toServer;
-
-        try
-        {
-            for (int i = 0; i < BlockChain.ProcessCount; i++)
-            {
-                // Send our key to all servers.
-                sock = new Socket(ServerName, ports.getKeyServerPort());
-                toServer = new PrintStream(sock.getOutputStream());
-                toServer.println("FakeKeyProcess" + BlockChain.PID);
-                toServer.flush();
-                sock.close();
-            }
-
-            Thread.sleep(1000); // wait for keys to settle, normally would wait for an ack
-            //Fancy arithmetic is just to generate identifiable blockIDs out of numerical sort order:
-            String fakeBlockA = "(Block#" + Integer.toString(((BlockChain.PID + 1) * 10) + 4) + " from P" + BlockChain.PID + ")";
-            String fakeBlockB = "(Block#" + Integer.toString(((BlockChain.PID + 1) * 10) + 3) + " from P" + BlockChain.PID + ")";
-
-            sock = new Socket(BlockChain.ServerName, ports.getUnverifiedBlockServerPort());
-            toServer = new PrintStream(sock.getOutputStream());
-
-            // Send a sample unverified block A to each server
-            for (int i = 0; i < BlockChain.ProcessCount; i++)
-            {
-                toServer.println(fakeBlockA);
-                toServer.flush();
-                sock.close();
-            }
-
-            // Send a sample unverified block B to each server
-            for (int i = 0; i < BlockChain.ProcessCount; i++)
-            {
-                toServer.println(fakeBlockB);
-                toServer.flush();
-                sock.close();
-            }
-        }
-        catch (Exception x)
-        {
-            x.printStackTrace();
-        }
-    }
-
-    private static void ReadInputFile(String fileName, int processId)
-    {
-        ArrayList<BlockRecord> blockRecords = new ArrayList();
-
-        // read through the input file setting each of the BlockRecord fields
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName)))
-        {
-
-            String inputLine;
-            while ((inputLine = br.readLine()) != null)
-            {
-                BlockRecord record = new BlockRecord();
-                record.setSHA256String("SHA string goes here...");
-                record.setSignedSHA256("Signed SHA string goes here...");
-                record.setBlockID(new String(UUID.randomUUID().toString()));
-                record.setCreatingProcess("Process" + Integer.toString(processId));
-                record.setVerificationProcessID("To be set later...");
-
-                // split the input line by 1 or more spaces into a delimited array
-                String[] inputData = inputLine.split(" +");
-
-                // every input file has the same ordering on the data points so we can hard code their index's
-                record.setSSNum(inputData[0]);
-                record.setFirstName(inputData[1]);
-                record.setLastName(inputData[2]);
-                record.setDateOfBirth(inputData[3]);
-                record.setDiagnosis(inputData[4]);
-                record.setTreatment(inputData[5]);
-                record.setMedication(inputData[6]);
-                blockRecords.add(record);
-            }
-        }
-        catch (IOException ex)
-        {
-            System.out.println("Error reading input text file" + ex);
-        }
-
-        // Print out all the names from the records collected
-        System.out.println(blockRecords.size() + " records read.");
-        System.out.println("Names from input:");
-        for (BlockRecord record : blockRecords)
-        {
-            System.out.println("\t" + record.getFirstName() + " " + record.getLastName());
-        }
-        System.out.println("\n");
-
-        Print(blockRecords);
-    }
-
-    /**
-     * Auzillary method to print out the block records
-     *
-     * @param blockRecords The block records to print
-     */
-    private static void Print(ArrayList<BlockRecord> blockRecords)
-    {
-        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-        System.out.println(gson.toJson(blockRecords));
     }
 }
 
