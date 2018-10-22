@@ -85,43 +85,44 @@ Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 "javac *.java" (twice) in one directory compiles all code from console window. </b></td><td align="left"><b>
-Yes                    </b></td></tr>
+Yes, however you have to include the .jar file for google's gson so the command is really:</b>
+javac -cp "gson-2.8.4.jar" *.java</td></tr>
 
 
 <tr> <td align="left"><b>
 System will run with supplied batch files </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 Process 2 startup triggers the running of the whole system </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 Provided clear console log file for your running processes </b></td><td align="left"><b>
-No                    </b></td></tr>
+I think so                    </b></td></tr>
 
 
 <tr> <td align="left"><b>
 Provided sample XML output of your blockchain in BlockchainLedgerSample.xml </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes, however I am using JSON instead of xml so it's really BlockChainLedgerSample.json</b></td></tr>
 
 
 <tr> <td align="left"><b>
 Three processes run from single program with arg 0,1,2 </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 Runs from the master grading script and sub-scripts?</b></td><td align="left"><b>
-No                    </b></td></tr>
+I think so                    </b></td></tr>
 
 <tr> <td align="left"><b>
 Writes final version of the ledger to BlockchainLedger.xml from process 0 </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes, except writes to BlockChainLedger.json                    </b></td></tr>
 
 
 <tr> <td align="left"><b>
 Correct headers for source files?    </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 <i> </i></b></td><td align="left"><b>
@@ -130,19 +131,19 @@ No                    </b></td></tr>
 
 <tr> <td align="left"><b>
 I ran and understand the BlockChain utilities program    </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 I ran and understand the BlockChain input utilities program with XML </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 I ran and understand the BlockChain Work program  </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 I ran and understand the BlockChain Process Coordination program  </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 
 <tr> <td align="center"><b>
@@ -155,7 +156,7 @@ No                    </b></td></tr>
 
 <tr> <td align="left"><b>
 All three processes contribute blocks to the ledger </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 Blocks are verified by SHA256 hash of 3 items: previous hash, random seed, data </b></td><td align="left"><b>
@@ -163,15 +164,15 @@ No                    </b></td></tr>
 
 <tr> <td align="left"><b>
 Reads prescribed data files for initial data  </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 Three processes cooperate  </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 Processes each serve multiple ports    </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 <i> </i></b></td><td align="left"><b>
@@ -183,7 +184,7 @@ No          </b></td></tr>
 
 <tr> <td align="left"><b>
 Process 0 writes the ledger to disk after each update to it </b></td><td align="left"><b>
-No          </b></td></tr>
+Yes          </b></td></tr>
 
 <tr> <td align="left"><b>
 Ledger is sent to other nodes after update  </b></td><td align="left"><b>
@@ -195,11 +196,11 @@ No          </b></td></tr>
 
 <tr> <td align="left"><b>
 Un-verified blocks are sent to all other processes  </b></td><td align="left"><b>
-No          </b></td></tr>
+Yes          </b></td></tr>
 
 <tr> <td align="left"><b>
 Un-verified blocks are marshaled to other processes as XML  </b></td><td align="left"><b>
-No          </b></td></tr>
+No, all blocks are marshalled as JSON          </b></td></tr>
 
 
 <tr> <td align="left"><b>
@@ -209,29 +210,32 @@ No          </b></td></tr>
 <tr> <td align="left"><b>
 Digital Signatures used
 </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 Digital Signatures are verified
 </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 Public Keys are kept with process IDs for all nodes
 </b></td><td align="left"><b>
-No                    </b></td></tr>
+There is only 1 set of keys. Process 2 hosts a KeyManager which distributes 1 public key to be used by all other processes
+The KeyManager is then the only place where data is signed                  </b></td></tr>
 
 <tr> <td align="left"><b>
-A verifying block checks the signature on the data hash before verification </b></td><td align="left"><b>
-No                    </b></td></tr>
+A verifying block checks the signature on the data hash before verification
+</b></td><td align="left"><b>
+I think so
+</b></td></tr>
 
 <tr> <td align="left"><b>
 <i> Work </i> has been implemented.</b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes, I used the 'work' function from the utilities program                    </b></td></tr>
 
 <tr> <td align="left"><b>
 <i> Work </i> method periodically checks to see if the block has already been verified </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 
 <tr> <td align="left"><b>
@@ -240,7 +244,7 @@ No                    </b></td></tr>
 
 <tr> <td align="left"><b>
 Nodes compete to verify blocks </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 Blocks are fully listed after console command to do so </b></td><td align="left"><b>
@@ -256,12 +260,12 @@ No                    </b></td></tr>
 
 <tr> <td align="left"><b>
 Credit is given to nodes for validating blocks  </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes, part of the block record stores the validating process's id                    </b></td></tr>
 
 
 <tr> <td align="left"><b>
 Blocks are fully verified with SHA256 and signatures </b></td><td align="left"><b>
-No                    </b></td></tr>
+Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 <center> Hard! (Optional)</center> </b></td><td align="left"><b>
