@@ -14,228 +14,22 @@
     An additional port is being used by process 2, this port
     is 1524 and it is the port that the KeyManager listens on
 ----------------------------------------------------------*/
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.*;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.ThreadLocalRandom;
-
-/**
- * A singleton for the Utilities class
- */
-class Utilities
-{
-    private static KeyManager KeyManager = null;
-
-    public static KeyManager GetKeyManager()
-    {
-        return KeyManager;
-    }
-
-    public static void SetKeyManager(KeyManager keyManager)
-    {
-        KeyManager = keyManager;
-    }
-
-    /**
-     * Read in the input file and deserialize it into a block record
-     *
-     * @param fileName  the file path to read in
-     * @param processId The current processes process Id
-     * @return a list of all records in the file
-     */
-    public static ArrayList<BlockRecord> ReadInputFile(String fileName, int processId)
-    {
-        ArrayList<BlockRecord> blockRecords = new ArrayList();
-        String currentPID = Integer.toString(processId);
-
-        // read through the input file setting each of the BlockRecord fields
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName)))
-        {
-
-            String inputLine;
-            while ((inputLine = br.readLine()) != null)
-            {
-                BlockRecord record = new BlockRecord();
-
-                /** Header information for the block **/
-                record.setBlockId(new String(UUID.randomUUID().toString()));
-                record.setCreatingProcess(currentPID);
-
-                // split the input line by 1 or more spaces into a delimited array
-                String[] inputData = inputLine.split(" +");
-
-                /** Patient information for the block **/
-                // every input file has the same ordering on the data points so we can hard code their index's
-                record.setSSNum(inputData[0]);
-                record.setFirstName(inputData[1]);
-                record.setLastName(inputData[2]);
-                record.setDateOfBirth(inputData[3]);
-                record.setDiagnosis(inputData[4]);
-                record.setTreatment(inputData[5]);
-                record.setMedication(inputData[6]);
-
-                // in order to finish the block we have to serialize it, sign it, and then update the block
-                String SHA256String = SerializeRecord(record);
-
-                // Sign the block and then Base64 Encode the resulting byte[] into a string
-                record.setSHA256String(SHA256String);
-                blockRecords.add(record);
-            }
-        }
-        catch (Exception ex)
-        {
-            BlockChain.PrintError("Error while reading input text file", ex);
-        }
-
-        // Print out all the names from the records collected
-        System.out.println(blockRecords.size() + " records read.");
-        System.out.println("Names from input:");
-        for (BlockRecord record : blockRecords)
-        {
-            System.out.println("\t" + record.getFirstName() + " " + record.getLastName());
-        }
-        System.out.println("\n");
-
-        return blockRecords;
-    }
-
-    /**
-     * Serialize a list of block records
-     *
-     * @param blockRecords The list of block records to serialize
-     */
-    public static String SerializeRecord(ArrayList<BlockRecord> blockRecords)
-    {
-        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-        return gson.toJson(blockRecords);
-    }
-
-    /**
-     * Serialize a single block record
-     * <p>
-     * * @param blockRecord The block record to serialize
-     */
-    public static String SerializeRecord(BlockRecord blockRecord)
-    {
-        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-        return gson.toJson(blockRecord);
-    }
-
-    public static BlockRecord DeserializeRecord(String recordString)
-    {
-        return new Gson().fromJson(recordString, BlockRecord.class);
-    }
-
-    /**
-     * Forward the unverified block to the keymanager or create the block and then send it if it's the dummy block
-     *
-     * @param unverifiedBlock An unverified block
-     */
-    public static void SendUnverifiedBlocks(BlockRecord unverifiedBlock)
-    {
-        try
-        {
-            Socket socket = null;
-            PrintStream out = null;
-
-            try
-            {
-                // create a socket to the key manager for sending the block to be signed
-                socket = new Socket(BlockChain.ServerName, Ports.KeyManagerPort);
-                out = new PrintStream(socket.getOutputStream());
-
-                // Special condition for startup so all processes have a dummy block
-                if (unverifiedBlock == null)
-                {
-                    BlockRecord record = new BlockRecord();
-                    /** Header information for the block **/
-                    record.setBlockId("0");
-                    record.setCreatingProcess(Integer.toString(BlockChain.PID));
-
-                    // in order to finish the block we have to serialize it, sign it, and then update the block
-                    String SHA256String = SerializeRecord(record);
-
-                    // Sign the block and then Base64 Encode the resulting byte[] into a string
-                    record.setSHA256String(SHA256String);
-
-                    System.out.println("Sending Unverified Block to be Signed");
-                    //Send the record to the key manager to be signed
-                    out.println(SerializeRecord(record));
-                    out.flush();
-
-                }
-                else
-                {
-                    //Send the record to the key manager to be signed
-                    out.println(SerializeRecord(unverifiedBlock));
-                    out.flush();
-                }
-            }
-            catch (IOException ex)
-            {
-                BlockChain.PrintError("Error sending unverified block to key manager to be signed", ex);
-            }
-            finally
-            {
-                out.close();
-                socket.close();
-            }
-
-        }
-        catch (Exception ex)
-        {
-            BlockChain.PrintError("Error while sending unverified block", ex);
-        }
-    }
-
-    /**
-     * Send the public key to the Public Key Server port for each process
-     *
-     * @param keyServerPorts The ports of the key servers
-     */
-    public static void SendKeys(int[] keyServerPorts)
-    {
-        Socket socket;
-        ObjectOutputStream toServer;
-
-        // If we're going to send the keys() then send them to every process and then return
-        for (int i = 0; i < keyServerPorts.length; i++)
-        {
-            // wrapping the try catch inside the for loop will stop the process from failing completely if it cant
-            // send to a single process for some reason
-            try
-            {
-                // Send the public key to all of the running processes key server ports
-                socket = new Socket(BlockChain.ServerName, keyServerPorts[i]);
-                toServer = new ObjectOutputStream(socket.getOutputStream());
-
-                System.out.println("Sending public key to process " + i);
-                toServer.writeObject(KeyManager.GetPublicKey());
-
-                toServer.flush();
-                toServer.close();
-                socket.close();
-            }
-            catch (IOException ex)
-            {
-                BlockChain.PrintError("Failed to send public keys to process " + i, ex);
-                return;
-            }
-        }
-    }
-}
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * The KeyManager class for generating the public/private key pair and also
@@ -247,7 +41,6 @@ class KeyManager
     private PublicKey publicKey = null;
     private PrivateKey privateKey = null;
     private Signature signer = null;
-    private PublicKey[] AllPublicKeys = null;
 
     /**
      * The KeyManager class used to generate, sign, and verify keys
@@ -393,7 +186,6 @@ class KeyManager
             return false;
         }
     }
-
 }
 
 /**
@@ -501,35 +293,8 @@ class Ports
     }
 }
 
-/**
- * BlockChain Block object with json serialization
- */
-class BlockRecord implements Comparable<BlockRecord>
+class DataBlock
 {
-    @SerializedName (value = "SHA256String")
-    private String SHA256String = "SHA256 String";
-
-    @SerializedName (value = "SignedSHA256")
-    private String SignedSHA256 = "Signed SHA256 String";
-
-    @SerializedName (value = "CreationTime")
-    private Date CreationTime = new Date();
-
-    @SerializedName (value = "BlockId")
-    private String BlockId = "";
-
-    @SerializedName (value = "SignedBlockId")
-    private String SignedBlockId = "";
-
-    @SerializedName (value = "VerificationProcessId")
-    private String VerificationProcessId = "";
-
-    @SerializedName (value = "CreatingProcess")
-    private String CreatingProcess = "";
-
-    @SerializedName (value = "PreviousHash")
-    private String PreviousHash = "";
-
     @SerializedName (value = "FirstName")
     private String FirstName = "";
 
@@ -552,154 +317,549 @@ class BlockRecord implements Comparable<BlockRecord>
     private String Medication = "";
 
     /**
-     * Get the SHA256Sting
+     * SEt the social security number for the person in this record block
      *
-     * @return
+     * @socialSecurityNumber The social security number to set
      */
-    public String getSHA256String()
-    {
-        return SHA256String;
-    }
-
-    public void setSHA256String(String SH)
-    {
-        this.SHA256String = SH;
-    }
-
-    public String getSignedSHA256()
-    {
-        return SignedSHA256;
-    }
-
-    public void setSignedSHA256(String SH)
-    {
-        this.SignedSHA256 = SH;
-    }
-
-    public String getCreationTime()
-    {
-        return this.CreationTime.toString();
-    }
-
-    public void setCreationTime(Date timestamp)
-    {
-        this.CreationTime = timestamp;
-    }
-
-    public String getCreatingProcess()
-    {
-        return CreatingProcess;
-    }
-
-    public void setCreatingProcess(String CP)
-    {
-        this.CreatingProcess = CP;
-    }
-
-    public String getVerificationProcessId()
-    {
-        return this.VerificationProcessId;
-    }
-
-    public void setVerificationProcessID(String verificationProcessId)
-    {
-        this.VerificationProcessId = verificationProcessId;
-    }
-
-    public String getBlockId()
-    {
-        return this.BlockId;
-    }
-
-    public void setBlockId(String blockId)
-    {
-        this.BlockId = blockId;
-    }
-
-    public String getSignedBlockId()
-    {
-        return this.SignedBlockId;
-    }
-
-    public void setSignedBlockId(String SignedBlockId)
-    {
-        this.SignedBlockId = SignedBlockId;
-    }
-
-    public String getSocialSecurityNumber()
-    {
-        return this.SocialSecurityNumber;
-    }
-
-    public void setSSNum(String socialSecurityNumber)
+    public void setSocialSecurityNumber(String socialSecurityNumber)
     {
         this.SocialSecurityNumber = socialSecurityNumber;
     }
 
+    /**
+     * Get the first name for the person in this record block
+     *
+     * @return The first name for the person in this record block
+     */
     public String getFirstName()
     {
         return this.FirstName;
     }
 
+    /**
+     * Set first name for the person in this record block
+     *
+     * @firstName The first name for the person in this record block
+     */
     public void setFirstName(String firstName)
     {
         this.FirstName = firstName;
     }
 
+    /**
+     * Get the last name for the person in this record block
+     *
+     * @return The last name for the person in this record block
+     */
     public String getLastName()
     {
         return LastName;
     }
 
+    /**
+     * Set the last name for the person in this record block
+     *
+     * @lastName The last name for the person in this record block
+     */
     public void setLastName(String lastName)
     {
         this.LastName = lastName;
     }
 
-    public String getDateOfBirth()
-    {
-        return this.DateOfBirth;
-    }
-
+    /**
+     * Set the date of birth for the person in this record block
+     *
+     * @dateOfBirth The date of birth for the person in this record block
+     */
     public void setDateOfBirth(String dateOfBirth)
     {
         this.DateOfBirth = dateOfBirth;
     }
 
-    public String getDiagnosis()
-    {
-        return this.Diagnosis;
-    }
-
+    /**
+     * Set the diagnosis for the person in this record block
+     *
+     * @diagnosis The diagnosis for the person in this record block
+     */
     public void setDiagnosis(String diagnosis)
     {
         this.Diagnosis = diagnosis;
     }
 
-    public String getTreatment()
-    {
-        return this.Treatment;
-    }
-
+    /**
+     * Set the treatment for the person in this record block
+     *
+     * @treatment The treatment for the person in this record block
+     */
     public void setTreatment(String treatment)
     {
         this.Treatment = treatment;
     }
 
-    public String getMedication()
-    {
-        return this.Medication;
-    }
-
+    /**
+     * Set the medication for the person in this record block
+     *
+     * @medication The medication for the person in this record block
+     */
     public void setMedication(String medication)
     {
         this.Medication = medication;
     }
+}
 
+/**
+ * BlockChain Block object with json serialization
+ */
+class BlockRecord implements Comparable<BlockRecord>, Comparator<BlockRecord>
+{
+    @SerializedName (value = "DataBlock")
+    private DataBlock DataBlock = new DataBlock();
+
+    @SerializedName( value = "BlockNumber")
+    private int BlockNumber  = 0;
+
+    @SerializedName (value = "SHA256HashedDataBlock")
+    private String SHA256HashedDataBlock = "";
+
+    @SerializedName (value = "SignedSHA256DataBlock")
+    private String SignedSHA256DataBlock = "";
+
+    @SerializedName (value = "CreationTime")
+    private Date CreationTime = new Date();
+
+    @SerializedName (value = "BlockId")
+    private String BlockId = "";
+
+    @SerializedName (value = "SignedBlockId")
+    private String SignedBlockId = "";
+
+    @SerializedName (value = "VerificationProcessId")
+    private String VerificationProcessId = "";
+
+    @SerializedName (value = "CreatingProcess")
+    private String CreatingProcess = "";
+
+    @SerializedName (value = "PreviousHash")
+    private String PreviousHash = "";
+
+    @SerializedName( value = "Seed")
+    private String Seed = "";
+
+    public DataBlock getDataBlock()
+    {
+        return this.DataBlock;
+    }
+
+    /**
+     * Get the current block number
+     * @return The current block number
+     */
+    public int getBlockNumber()
+    {
+        return BlockNumber;
+    }
+
+    /**
+     * Set the current block number
+     * @param blockNumber The current block number
+     */
+    public void setBlockNumber(int blockNumber)
+    {
+        BlockNumber = blockNumber;
+    }
+
+    /**
+     * Get the SHA256Sting
+     *
+     * @return
+     */
+    public String getSHA256HashedDataBlock()
+    {
+        return SHA256HashedDataBlock;
+    }
+
+    /**
+     * Set teh SHA256 String
+     *
+     * @param sha256String the SHA256HashedDataBlock to set
+     */
+    public void setSHA256HashedDataBlock(String sha256String)
+    {
+        this.SHA256HashedDataBlock = sha256String;
+    }
+
+    /**
+     * Get the signed SHA256 string
+     *
+     * @return The Signed version of the SHA256 string
+     */
+    public String getSignedSHA256DataBlock()
+    {
+        return SignedSHA256DataBlock;
+    }
+
+    /**
+     * Set the signed version of the SHA256 signed string
+     *
+     * @param sha256String the signed SHA256 string
+     */
+    public void setSignedSHA256DataBlock(String sha256String)
+    {
+        this.SignedSHA256DataBlock = sha256String;
+    }
+
+    /**
+     * Get the signed previous hash
+     *
+     * @return The signedPreviousHash
+     */
+    public String getPreviousHash()
+    {
+        return this.PreviousHash;
+    }
+
+    /**
+     * Set the signed previous Hash
+     *
+     * @param previousHash the signed previous hash
+     */
+    public void setPreviousHash(String previousHash)
+    {
+        this.PreviousHash = previousHash;
+    }
+
+    /**
+     * Get the random seed value from the block
+     * @return An int representing the random seed value
+     */
+    public String getSeed()
+    {
+        return this.Seed;
+    }
+
+    /**
+     * Set the Seed value (the value that sovled the puzzle ) for this block
+     * @param seed The new seed value
+     */
+    public void setSeed( String seed)
+    {
+        this.Seed = seed;
+    }
+
+    /**
+     * Set the process that created this blocks id
+     *
+     * @param creatingProcess creating processes id
+     */
+    public void setCreatingProcess(String creatingProcess)
+    {
+        this.CreatingProcess = creatingProcess;
+    }
+
+    /**
+     * Set teh verifying process's id
+     *
+     * @param verificationProcessId The id of the verifying process
+     */
+    public void setVerificationProcessID(String verificationProcessId)
+    {
+        this.VerificationProcessId = verificationProcessId;
+    }
+
+    /**
+     * Get the block id for this record block
+     *
+     * @return The block id for this record block
+     */
+    public String getBlockId()
+    {
+        return this.BlockId;
+    }
+
+    /**
+     * Set the block Id for this record block
+     *
+     * @param blockId the block Id to set
+     */
+    public void setBlockId(String blockId)
+    {
+        this.BlockId = blockId;
+    }
+
+    /**
+     * Get the signed blockId for this block
+     *
+     * @return The signed blockId for this block
+     */
+    public String getSignedBlockId()
+    {
+        return this.SignedBlockId;
+    }
+
+    /**
+     * Set the signed blockId for this record block
+     *
+     * @param SignedBlockId The signed block Id for this record block
+     */
+    public void setSignedBlockId(String SignedBlockId)
+    {
+        this.SignedBlockId = SignedBlockId;
+    }
+
+
+    /**
+     * Comparision override for the block record. Compares the creation date's
+     *
+     * @param other the BlockRecord to compare against
+     * @return An int representing the comparison evaluation
+     */
     @Override
     public int compareTo(BlockRecord other)
     {
         return this.CreationTime.compareTo(other.CreationTime);
+    }
+
+    @Override
+    public int compare(BlockRecord a, BlockRecord b)
+    {
+        return a.BlockNumber - b.BlockNumber;
+    }
+}
+
+/**
+ * A singleton for the Utilities class
+ */
+class Utilities
+{
+    private static KeyManager KeyManager = null;
+
+    public static KeyManager GetKeyManager()
+    {
+        return KeyManager;
+    }
+
+    public static void SetKeyManager(KeyManager keyManager)
+    {
+        KeyManager = keyManager;
+    }
+
+    /**
+     * Read in the input file and deserialize it into a block record
+     *
+     * @param fileName  the file path to read in
+     * @param processId The current processes process Id
+     * @return a list of all records in the file
+     */
+    public static ArrayList<BlockRecord> ReadInputFile(String fileName, int processId)
+    {
+        ArrayList<BlockRecord> blockRecords = new ArrayList<BlockRecord>();
+        String currentPID = Integer.toString(processId);
+
+        // read through the input file setting each of the BlockRecord fields
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName)))
+        {
+
+            String inputLine;
+            while ((inputLine = br.readLine()) != null)
+            {
+                BlockRecord record = new BlockRecord();
+
+                /** Header information for the block **/
+                record.setBlockId(new String(UUID.randomUUID().toString()));
+                record.setCreatingProcess(currentPID);
+
+                // split the input line by 1 or more spaces into a delimited array
+                String[] inputData = inputLine.split(" +");
+
+                /** Patient information for the block **/
+                // every input file has the same ordering on the data points so we can hard code their index's
+                record.getDataBlock().setFirstName(inputData[0]);
+                record.getDataBlock().setLastName(inputData[1]);
+                record.getDataBlock().setDateOfBirth(inputData[2]);
+                record.getDataBlock().setSocialSecurityNumber(inputData[3]);
+                record.getDataBlock().setDiagnosis(inputData[4]);
+                record.getDataBlock().setTreatment(inputData[5]);
+                record.getDataBlock().setMedication(inputData[6]);
+
+                blockRecords.add(record);
+            }
+        }
+        catch (Exception ex)
+        {
+            BlockChain.PrintError("Error while reading input text file", ex);
+        }
+
+        // Print out all the names from the records collected
+        System.out.println(blockRecords.size() + " records read.");
+        System.out.println("Names from input:");
+        for (BlockRecord record : blockRecords)
+        {
+            System.out.println("\t" + record.getDataBlock().getFirstName() + " " + record.getDataBlock().getLastName());
+        }
+        System.out.println("\n");
+
+        return blockRecords;
+    }
+
+    /**
+     * Serialize a list of block records
+     *
+     * @param blockRecords The list of block records to serialize
+     */
+    public static String SerializeRecord(ArrayList<BlockRecord> blockRecords)
+    {
+        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        return gson.toJson(blockRecords);
+    }
+
+    /**
+     * Serialize a DataBlock
+     *
+     * @param dataBlock The list of block records to serialize
+     */
+    public static String SerializeDataBlock(DataBlock dataBlock)
+    {
+        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        return gson.toJson(dataBlock);
+    }
+
+    /**
+     * Serialize a single block record
+     * <p>
+     * * @param blockRecord The block record to serialize
+     */
+    public static String SerializeRecord(BlockRecord blockRecord)
+    {
+        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        return gson.toJson(blockRecord);
+    }
+
+    public static BlockRecord DeserializeRecord(String recordString)
+    {
+        return new Gson().fromJson(recordString, BlockRecord.class);
+    }
+
+    /**
+     * Deserialize the BlockRecord Ledger
+     *
+     * @return A deserialized block ledger
+     * @param: a serialized block ledger
+     */
+    public static ArrayList<BlockRecord> DeserializeLedger(String ledgerString)
+    {
+        Type listType = new TypeToken<ArrayList<BlockRecord>>(){}.getType();
+        return new Gson().fromJson(ledgerString, listType);
+    }
+
+    /**
+     * Forward the unverified block to the keymanager or create the block and then send it if it's the dummy block
+     *
+     * @param unverifiedBlock An unverified block
+     */
+    public static void SendUnverifiedBlocks(BlockRecord unverifiedBlock)
+    {
+        try
+        {
+            Socket socket = null;
+            PrintStream out = null;
+
+            try
+            {
+                // create a socket to the key manager for sending the block to be signed
+                socket = new Socket(BlockChain.ServerName, Ports.KeyManagerPort);
+                out = new PrintStream(socket.getOutputStream());
+
+                // Special condition for startup so all processes have a dummy block
+                if (unverifiedBlock == null)
+                {
+                    BlockRecord record = new BlockRecord();
+                    /** Header information for the block **/
+                    record.setBlockId("0");
+                    record.setCreatingProcess(Integer.toString(BlockChain.PID));
+
+                    System.out.println("Sending Unverified Block to be Signed");
+                    //Send the record to the key manager to be signed
+                    out.println(SerializeRecord(record));
+                    out.flush();
+                }
+                else
+                {
+                    //Send the record to the key manager to be signed
+                    out.println(SerializeRecord(unverifiedBlock));
+                    out.flush();
+                }
+            }
+            catch (IOException ex)
+            {
+                BlockChain.PrintError("Error sending unverified block to key manager to be signed", ex);
+            }
+            finally
+            {
+                out.close();
+                socket.close();
+            }
+
+        }
+        catch (Exception ex)
+        {
+            BlockChain.PrintError("Error while sending unverified block", ex);
+        }
+    }
+
+    /**
+     * Send the public key to the Public Key Server port for each process
+     *
+     * @param keyServerPorts The ports of the key servers
+     */
+    public static void SendKeys(int[] keyServerPorts)
+    {
+        Socket socket;
+        ObjectOutputStream toServer;
+
+        // If we're going to send the keys() then send them to every process and then return
+        for (int i = 0; i < keyServerPorts.length; i++)
+        {
+            // wrapping the try catch inside the for loop will stop the process from failing completely if it cant
+            // send to a single process for some reason
+            try
+            {
+                // Send the public key to all of the running processes key server ports
+                socket = new Socket(BlockChain.ServerName, keyServerPorts[i]);
+                toServer = new ObjectOutputStream(socket.getOutputStream());
+
+                System.out.println("Sending public key to process " + i);
+                toServer.writeObject(KeyManager.GetPublicKey());
+
+                toServer.flush();
+                toServer.close();
+                socket.close();
+            }
+            catch (IOException ex)
+            {
+                BlockChain.PrintError("Failed to send public keys to process " + i, ex);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Using the given stringToHash generate a new hash string
+     * @param stringToHash The string to get a Hash From
+     * @return the Hash of the stringToHash
+     */
+    public static byte[] GetHash( String stringToHash )
+    {
+        try
+        {
+            MessageDigest MD = MessageDigest.getInstance("SHA-256");
+            // Get the hash value
+            return MD.digest(stringToHash.getBytes("UTF-8"));
+        }
+        catch (Exception ex)
+        {
+            BlockChain.PrintError("Failed to get hash for string" + stringToHash);
+            return null;
+        }
     }
 }
 
@@ -710,6 +870,7 @@ class UnverifiedBlockConsumer implements Runnable
         BlockRecord record;
 
         BlockChain.PrintInformation("Starting the Unverified Block Consumer thread.");
+
         try
         {
             while (true)
@@ -731,52 +892,52 @@ class UnverifiedBlockConsumer implements Runnable
                     }
                 }
 
-                byte[] signedSHA256String;
-                byte[] signedBlockId;
-                // Validate the signature of the block if it's invalid don't bother processing it
-                try
+                if (!isValidBlock(record))
                 {
-                    signedSHA256String = Base64.getDecoder().decode(record.getSignedSHA256());
-                }
-                catch (IllegalArgumentException ex)
-                {
-                    BlockChain.PrintError("Failed to base64 decode the signed SHA256 String", ex);
                     continue;
                 }
 
                 try
                 {
-                    signedBlockId = Base64.getDecoder().decode(record.getSignedBlockId());
-                }
-                catch (IllegalArgumentException ex)
-                {
-                    BlockChain.PrintError("Failed to base64 decode the signed block id", ex);
-                    continue;
-                }
+                    // Set the new block number
+                    int currentBlockNum = BlockChain.BlockLedger.size() + 1;
+                    record.setBlockNumber(currentBlockNum);
 
+                    // Set the verifiers process id
+                    record.setVerificationProcessID(Integer.toString(BlockChain.ProcessId));
 
-                if (!Utilities.GetKeyManager().VerifySignature(record.getSHA256String().getBytes(), signedSHA256String))
-                {
-                    BlockChain.PrintError("Record's sha256String has an been signed by an invalid private key");
-                    continue;
-                }
+                    String previousHash;
 
-                // Validate the signature of the signed block id if it's invalid dont bother processing it
-                if (!Utilities.GetKeyManager().VerifySignature(record.getBlockId().getBytes(), signedBlockId))
-                {
-                    BlockChain.PrintError("Record's blockId has an been signed by an invalid private key");
-                    continue;
-                }
-
-                // Do fake work for now
-                int j;
-                for (int i = 0; i < 100; i++)
-                {
-                    // put a limit on the fake work for this example
-                    j = ThreadLocalRandom.current().nextInt(0, 10);
-                    try
+                    // If this is the dummy block there isnt anything in the ledger yet so create the previousHash from the current block
+                    if (!record.getBlockId().equals("0") && BlockChain.BlockLedger.size() != 0)
                     {
-                        Thread.sleep(500);
+                        int previousBlockNum = BlockChain.BlockLedger.size() - 1;
+                        //Need to validate that this will produce the previous hash
+                        previousHash = BlockChain.BlockLedger.get(previousBlockNum).getPreviousHash();
+                    }
+                    else
+                    {
+                        previousHash = DatatypeConverter.printHexBinary(Utilities.GetHash(record.getSHA256HashedDataBlock()));
+                    }
+
+                    for (int i = 1; i < 200; i++)
+                    {
+                        // Generate an alpha numeric string and append it to the current serialized block of data
+                        String randString = this.randomAlphaNumeric(10);
+                        String concatString = previousHash + randString;
+
+                        //Generate the new Hash
+                        String newHash = DatatypeConverter.printHexBinary(Utilities.GetHash(concatString)); // Turn into a string of hex values
+
+                        if (this.IsValidAnswer(newHash))
+                        {
+                            // The puzzle was solved so update the seed with the answer to the puzzle
+                            record.setSeed(randString);
+
+                            // Update the previous hash value with the new hash containing the previoius hash and the current blocks
+                            record.setPreviousHash(concatString);
+                            break;
+                        }
 
                         // Make sure the block hasn't already been solved while doing work.
                         for (BlockRecord ledgerRecord : BlockChain.BlockLedger)
@@ -791,39 +952,37 @@ class UnverifiedBlockConsumer implements Runnable
                         }
 
                         // There is no reason to continue doing work because the block has been added to the ledger
-                        if(blockExists)
+                        if (blockExists)
                         {
                             break;
                         }
 
                     }
-                    catch (Exception ex)
-                    {
-                        BlockChain.PrintError( "Error occured while doing 'work'", ex);
-                    }
-
-                    if (j < 3)
-                    {
-                        break;
-                    }
+                }
+                catch (Exception ex)
+                {
+                    BlockChain.PrintError("Error occurred while doing 'work'", ex);
                 }
 
-                for (BlockRecord ledgerRecord : BlockChain.BlockLedger)
+                if (!blockExists)
                 {
-                    //If our current ledger already contains a block with this block id that means it's been solved so we dont have to solve it
-                    if (ledgerRecord.getBlockId().compareToIgnoreCase(record.getBlockId()) == 0)
+                    for (BlockRecord ledgerRecord : BlockChain.BlockLedger)
                     {
-                        BlockChain.PrintInformation("Block already verified so wait for next block");
-                        blockExists = true;
-                        break;
+                        //If our current ledger already contains a block with this block id that means it's been solved so we dont have to solve it
+                        if (ledgerRecord.getBlockId().compareToIgnoreCase(record.getBlockId()) == 0)
+                        {
+                            BlockChain.PrintInformation("Block already verified so wait for next block");
+                            blockExists = true;
+                            break;
+                        }
                     }
-                }
 
-                record.setVerificationProcessID(Integer.toString(BlockChain.ProcessId));
-                // We made it this far without the puzzle being sovled by another process so send the new record to the block chain server to be added to the ledger
-                if(!blockExists)
-                {
-                    this.SendBlock(record);
+                    // We made it this far without the puzzle being solved by another process send the new record to be validated and added to the ledger
+                    if (!blockExists)
+                    {
+                        BlockChain.BlockLedger.add(record);
+                        this.SendVerifiedBlock();
+                    }
                 }
             }
         }
@@ -833,13 +992,69 @@ class UnverifiedBlockConsumer implements Runnable
         }
     }
 
-    public void SendBlock(BlockRecord record)
+    /**
+     * Validate that the "answer" to the puzzle
+     * @param answer A string representing our answer
+     * @return A value indicating if this is the answer to the puzzle
+     */
+    private boolean IsValidAnswer(String answer)
+    {
+        try
+        {
+            // Collect only the first 16 bits from the new hash and get the Base 16 representation of it converted into an int
+            int workNumber = Integer.parseInt(answer.substring(0, 4), 16);
+
+            // if the work # is less that 20000k we've solved the puzzle
+            if (workNumber < 20000)
+            {
+                return true;
+            }
+        }
+        catch (IndexOutOfBoundsException ex)
+        {
+            BlockChain.PrintError("Index out of bounds", ex);
+            return false;
+        }
+
+        return false;
+    }
+
+    /**
+     * Code Used from WorkA to Generate a random Alpha Numeric String
+     * https://condor.depaul.edu/elliott/435/hw/programs/Blockchain/WorkA.java
+     * @param seed The number of randomly chosen characters you want to use
+     * @return A random Alpha Numeric string
+     */
+    private String randomAlphaNumeric(int seed)
+    {
+
+        String alphaNumeric = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        StringBuilder builder = new StringBuilder();
+
+        // Loop until the seed value is 0
+        while (seed-- != 0)
+        {
+            // Using Randomly choose a characters index from the A String of all Alpha Numeric values
+            // repeat until the seed count is 0
+            int character = (int)(Math.random() * alphaNumeric.length());
+            builder.append(alphaNumeric.charAt(character));
+        }
+
+        return builder.toString();
+    }
+
+    /**
+     * Send an updated ledger to all processes
+     */
+    public void SendVerifiedBlock()
     {
         PrintStream out;
         Socket sock;
 
         try
         {
+
             // Forward the new block to all of the block chain server so it can be added to the ledger
             int[] blockChainServerPorts = Ports.getBlockChainServerPortsInUse();
             for (int i = 0; i < blockChainServerPorts.length; i++)
@@ -847,8 +1062,10 @@ class UnverifiedBlockConsumer implements Runnable
                 // send to each process in group, including us:
                 sock = new Socket(BlockChain.ServerName, blockChainServerPorts[i]);
                 out = new PrintStream(sock.getOutputStream());
-                BlockChain.PrintInformation("Sending new verified block to be stored in the ledger");
-                out.println(Utilities.SerializeRecord(record));
+
+                BlockChain.PrintInformation("Sending updated block ledger");
+                out.println(Utilities.SerializeRecord(BlockChain.BlockLedger));
+
                 out.flush();
                 out.close();
                 sock.close();
@@ -858,6 +1075,51 @@ class UnverifiedBlockConsumer implements Runnable
         {
             BlockChain.PrintError("Failed to send verified block to block chain server", ex);
         }
+    }
+
+    /**
+     * Validate the block checking the signed blockId, the signed data block, and the previous hash
+     * @param record The record block to validate
+     * @return
+     */
+    private boolean isValidBlock(BlockRecord record)
+    {
+        // Get the signed block id to verify it
+        try
+        {
+            byte[] signedBlockId = Base64.getDecoder().decode(record.getSignedBlockId());
+            // Validate the signature of the signed block id if it's invalid dont bother processing it
+            if (!Utilities.GetKeyManager().VerifySignature(record.getBlockId().getBytes(), signedBlockId))
+            {
+                BlockChain.PrintError("Record's blockId has an been signed by an invalid private key");
+                return false;
+            }
+        }
+        catch (IllegalArgumentException ex)
+        {
+            BlockChain.PrintError("Failed to base64 decode the signed block id", ex);
+            return false;
+        }
+
+        // Get the signed data block to verify it
+        try
+        {
+            byte[] signedDataBlock = Base64.getDecoder().decode(record.getSignedSHA256DataBlock());
+
+            // Validate the signature of the signed data id if it's invalid dont bother processing it
+            if (!Utilities.GetKeyManager().VerifySignature(record.getSHA256HashedDataBlock().getBytes(), signedDataBlock))
+            {
+                BlockChain.PrintError("Record's data block has an been signed by an invalid private key");
+                //return false;
+            }
+        }
+        catch (IllegalArgumentException ex)
+        {
+            BlockChain.PrintError("Failed to base64 decode the signed dat block", ex);
+            return false;
+        }
+
+        return true;
     }
 }
 
@@ -1008,19 +1270,46 @@ class KeyManagerWorker extends Thread
                     recordBlock += incomingBlock;
                 }
 
-                //Get the new block, sign the SHA256 string and the blockId with the private key, and send the block out to the unverified block process
+                // Get the new block, sign the SHA256 string and the blockId with the private key, and send the block out to the unverified block process
                 BlockRecord blockToSend = Utilities.DeserializeRecord(recordBlock);
 
+                // Generate a hash of the data block
+                byte[] blockHash = Utilities.GetHash(Utilities.SerializeDataBlock(blockToSend.getDataBlock()));
+
+                // This code was taken from Blockh.java @ https://condor.depaul.edu/elliott/435/hw/programs/Blockchain/BlockH.java
+                // I actually had this working without building the hex string and then when I switched to using more complex data in the hash it broke everything and
+                // i ran out of time to figure out why
+                StringBuffer sb = new StringBuffer();
+                for (int i = 0; i < blockHash.length; i++)
+                {
+                    sb.append(Integer.toString((blockHash[i] & 0xff) + 0x100, 16).substring(1));
+                }
+
+                String SHA256String = sb.toString();
+
+                blockToSend.setSHA256HashedDataBlock(SHA256String);
+
+                // Sign the data block and base 64 encode it
+                byte[] signedDataBlock = this.keyManager.SignData(blockToSend.getSHA256HashedDataBlock().getBytes("UTF-8"));
+
+                blockToSend.setSignedSHA256DataBlock(Base64.getEncoder().encodeToString(signedDataBlock));
+
+                // Sign the block and then base 64 encode it
+                byte[] signedBlockId = this.keyManager.SignData(blockToSend.getBlockId().getBytes("UTF-8"));
+                blockToSend.setSignedBlockId(Base64.getEncoder().encodeToString(signedBlockId));
+
                 int[] unverifiedBlockPorts = Ports.getUnverifiedBlockServerPortsInUse();
-
-                //Sign the block and then base 64 encode it
-                blockToSend.setSignedSHA256(Base64.getEncoder().encodeToString(this.keyManager.SignData(blockToSend.getSHA256String().getBytes())));
-                blockToSend.setSignedBlockId(Base64.getEncoder().encodeToString(this.keyManager.SignData(blockToSend.getBlockId().getBytes())));
-
                 // send the generated block to each process
                 for (int i = 0; i < unverifiedBlockPorts.length; i++)
                 {
-                    BlockChain.PrintInformation("Sending Unverified Block to Process " + i);
+                    if( blockToSend.getBlockId().equals("0"))
+                    {
+                        BlockChain.PrintInformation("Sending DummyBlock Block to Process " + i);
+                    }
+                    else
+                    {
+                        BlockChain.PrintInformation("Sending Unverified Block to Process " + i);
+                    }
 
                     Socket unverifiedBlockServerSocket = new Socket(BlockChain.ServerName, unverifiedBlockPorts[i]);
                     out = new PrintStream(unverifiedBlockServerSocket.getOutputStream());
@@ -1053,6 +1342,8 @@ class KeyManagerWorker extends Thread
 class BlockChainWorker extends Thread
 {
     private Socket socket;
+    private static final Lock serializeLock = new ReentrantLock();
+    private static boolean IsSerializing = false;
 
     BlockChainWorker(Socket s)
     {
@@ -1071,38 +1362,19 @@ class BlockChainWorker extends Thread
 
             try
             {
-                // Listen for a new block to be completed and then add it to the current ledger
-                String newBlock = "";
+                // Listen for a new ledger to come in
+                String newLedger = "";
                 String incomingBlock;
                 while ((incomingBlock = in.readLine()) != null)
                 {
-                    newBlock += incomingBlock;
+                    newLedger += incomingBlock;
                 }
 
-                BlockRecord record = Utilities.DeserializeRecord(newBlock) ;
+                BlockChain.BlockLedger = Utilities.DeserializeLedger(newLedger);
 
-                boolean blockExists = false;
-                // One last test to make sure the block hasnt been added to the ledger already
-                for (BlockRecord ledgerRecord : BlockChain.BlockLedger)
+                if (BlockChain.ProcessId == 0)
                 {
-                    //If our current ledger already contains a block with this block id that means it's been solved so we don't have to solve it
-                    if (ledgerRecord.getBlockId().compareToIgnoreCase(record.getBlockId()) == 0)
-                    {
-                        BlockChain.PrintInformation("Duplicate record found for blockId " + record.getBlockId() + " in ledger");
-                        blockExists = true;
-                        break;
-                    }
-                }
-
-                if(!blockExists)
-                {
-                    // The record is unique so update the ledger
-                    BlockChain.BlockLedger.add(record);
-                    //If this is the process with an Id of 0 then we need to export the ledger to disk
-                    if (BlockChain.ProcessId == 0)
-                    {
-                        this.ExportLedger();
-                    }
+                    this.ExportLedger();
                 }
             }
             catch (Exception ex)
@@ -1128,8 +1400,16 @@ class BlockChainWorker extends Thread
         try
         {
             BufferedWriter bw = null;
-
-            String serializedBlock = Utilities.SerializeRecord(BlockChain.BlockLedger);
+            String serializedBlock;
+            serializeLock.lock();
+            try
+            {
+                serializedBlock = this.SerializeRecord(BlockChain.BlockLedger);
+            }
+            finally
+            {
+                serializeLock.unlock();
+            }
 
             try
             {
@@ -1140,10 +1420,10 @@ class BlockChainWorker extends Thread
                 bw.write(serializedBlock);
                 bw.flush();
             }
-           catch( IOException ex)
-           {
-               BlockChain.PrintError("Error while exporting the blockchain ledger", ex);
-           }
+            catch (IOException ex)
+            {
+                BlockChain.PrintError("Error while exporting the blockchain ledger", ex);
+            }
             finally
             {
                 bw.close();
@@ -1153,6 +1433,17 @@ class BlockChainWorker extends Thread
         {
             BlockChain.PrintError("Error while exporting the blockchain ledger", ex);
         }
+    }
+
+    /**
+     * Serialize a list of block records
+     *
+     * @param blockRecords The list of block records to serialize
+     */
+    private String SerializeRecord(ArrayList<BlockRecord> blockRecords)
+    {
+        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        return gson.toJson(blockRecords);
     }
 }
 
@@ -1313,11 +1604,12 @@ class KeyManagerThread implements Runnable
  */
 public class BlockChain
 {
+    public static final boolean DEBUGMODE = true;
     public static final int ProcessCount = 3;
     public static final int PID = 0;
     public static final String ServerName = "localhost";
-    public static final BlockingQueue<BlockRecord> Queue = new PriorityBlockingQueue<>();
-    public static ArrayList<BlockRecord> BlockLedger = new ArrayList<>();
+    public static final BlockingQueue<BlockRecord> Queue = new PriorityBlockingQueue<BlockRecord>();
+    public static ArrayList<BlockRecord> BlockLedger = new ArrayList<BlockRecord>();
     public static int ProcessId = 0;
 
     /**
@@ -1397,11 +1689,16 @@ public class BlockChain
             {
                 Thread.sleep(1000);
             }
+
+            // A little extra sleep to make sure the key is set up
+            Thread.sleep(1000);
         }
         catch (Exception ex)
         {
             BlockChain.PrintError("Error while sleeping", ex);
         }
+
+
 
         // Now that all the servers on each process should be running let process 2 send out the initial unverified block
         if (ProcessId == 2)
@@ -1420,6 +1717,7 @@ public class BlockChain
 
     /**
      * Write the log line to System.out
+     *
      * @param logString The string to log
      */
     public static void PrintInformation(String logString)
@@ -1429,27 +1727,34 @@ public class BlockChain
 
     /**
      * Writes the error string and exception to System.err
+     *
      * @param logString the log line
-     * @param ex The exception
+     * @param ex        The exception
      */
     public static void PrintError(String logString, Exception ex)
     {
         String errorStr = "*********************ERROR********************\n";
         errorStr += "Process " + BlockChain.ProcessId + ": " + logString + " with exception: " + ex + "\n";
-        errorStr += "*********************ERROR********************";
         System.err.println(errorStr);
+        ex.printStackTrace();
+        System.err.println("*********************ERROR********************");
     }
 
     /**
      * Writes the error string and exception to System.err
+     *
      * @param logString the log line
      */
     public static void PrintError(String logString)
     {
-        String errorStr = "*********************ERROR********************\n";
-        errorStr += "Process " + BlockChain.ProcessId + ": " + logString + "\n";
-        errorStr += "*********************ERROR********************";
-        System.err.println(errorStr);
+        if (BlockChain.DEBUGMODE)
+        {
+            String errorStr = "*********************ERROR********************\n";
+            errorStr += "Process " + BlockChain.ProcessId + ": " + logString + "\n";
+            errorStr += "*********************ERROR********************";
+            System.err.println(errorStr);
+        }
+
     }
 }
 

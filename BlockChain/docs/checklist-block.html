@@ -152,7 +152,7 @@ Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 Processes produce a basic blockchain ledger </b></td><td align="left"><b>
-No                    </b></td></tr>
+I think so                    </b></td></tr>
 
 <tr> <td align="left"><b>
 All three processes contribute blocks to the ledger </b></td><td align="left"><b>
@@ -160,7 +160,9 @@ Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 Blocks are verified by SHA256 hash of 3 items: previous hash, random seed, data </b></td><td align="left"><b>
-No                    </b></td></tr>
+I am verifying the signed blockId and the signed datablock( this is failing but only sometimes which I'm not sure as to why<br>
+and couldnt figure it out), I have a test to validate the previous hash but there is a bug in getting it and it caused my entire work process<br>
+to fail so I pulled it out</b></td></tr>
 
 <tr> <td align="left"><b>
 Reads prescribed data files for initial data  </b></td><td align="left"><b>
@@ -180,7 +182,7 @@ Yes                    </b></td></tr>
 
 <tr> <td align="left"><b>
 Updated blockchain ledger is distributed to three nodes </b></td><td align="left"><b>
-No          </b></td></tr>
+Yes          </b></td></tr>
 
 <tr> <td align="left"><b>
 Process 0 writes the ledger to disk after each update to it </b></td><td align="left"><b>
@@ -188,11 +190,11 @@ Yes          </b></td></tr>
 
 <tr> <td align="left"><b>
 Ledger is sent to other nodes after update  </b></td><td align="left"><b>
-No          </b></td></tr>
+Yes          </b></td></tr>
 
 <tr> <td align="left"><b>
 Ledger is marshaled to other nodes as XML  </b></td><td align="left"><b>
-No          </b></td></tr>
+Yes, except it's marshaled as JSON rather than xml          </b></td></tr>
 
 <tr> <td align="left"><b>
 Un-verified blocks are sent to all other processes  </b></td><td align="left"><b>
@@ -351,16 +353,43 @@ No                    </b></td></tr>
 <tr> <td align="left"><b>
 [Fill in custom extra feature] add
 multiple entries as needed    </b></td><td align="left"><b>
-Yes                    </b></td></tr>
+No                    </b></td></tr>
 
 </tbody></table>
 
-</font></p><h3><font face="Cambria" size="3"> Your special comments to me, only if needed: </font></h3><font face="Cambria" size="3">
+</font></p><h3><font face="Cambria" size="3"> Notes</font></h3><font face="Cambria" size="3">
 
-Comment one <p>
+Comment 1
+<p>
+    I have included gsos-2.8.4.jar for dealing with JSON serialization/deserialization. In order to compile you must use javac -cp "gson-2.8.4.jar" *.java<br>
+    I was able to get this to compile but am having trouble when running it( i was using an IDE to run it all along and was dumb and forgot to check that once compiled via the command line it could still run<br>
+    The assignment is due now so i'm going to submit what I have and attempt to fix it with the little time I have left just to make sure I have a submission
+</p>
 
-Comment two, etc. </p><p>
+Comment 2
+<p>
+    Rather than pass around the keypairs secret, I created a single worker thread called KeyMangaer that is hosted from process 2<br>
+    This thread creates the KeyManager object which holds the only copy of the private key, it then listens on port 1524(we've used this port in the past).<br>
+    When it receives a message(all new unverified blocks) it will take the block and sign the SHA256 string representing the block and the blockId for the block with the private key.<br>
+    I believe this is far more secure then passing around the private key to every service even if it is encoded in the SHA256 string.<br>
+    From there it forwards it on to every processes unverified block port to be added to the queue. <br>
+    The public key worker will then take the public key that was created on process 2 and send that key to each process which creates their own instance of the KeyManager <br>
+    object to store the public key for verifying the blocks before doing work on them.
+</p>
 
+Comment 3
+<p>
+    There are a couple bugs in my program that I wasnt able to work out. Occasionally the signed data block is coming up as invalid, it's not consistent and i couldnt figure out why before running out of time<br>
+    Also, the exported ledger doesnt seem to get all of the blocks I'm constantly only getting 13 blocks instead of the expected 16. I think part of the problem is when an exception happens i break out of the current loop<br>
+    but if the exception happens on all of the nodes then the block is dropped but I dont have an evidence for that at this time.
+</p>
 
-</p></font></font></font>
+    Comment 4
+    <p>
+        There are a couple bugs in my program that I wasnt able to work out. Occasionally the signed data block is coming up as invalid, it's not consistent and i couldnt figure out why before running out of time<br>
+        Also, the exported ledger doesnt seem to get all of the blocks I'm constantly only getting 13 blocks instead of the expected 16. I think part of the problem is when an exception happens i break out of the current loop<br>
+        but if the exception happens on all of the nodes then the block is dropped but I dont have an evidence for that at this time.
+    </p>
+</font></font></font>
+
 </body></html>
