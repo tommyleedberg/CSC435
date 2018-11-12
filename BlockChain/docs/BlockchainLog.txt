@@ -1,0 +1,1357 @@
+Process 0:
+
+"C:\Program Files\Java\jdk1.8.0_181\bin\java" -agentlib:jdwp=transport=dt_socket,address=127.0.0.1:65302,suspend=y,server=n -javaagent:C:\Users\tommy\.IntelliJIdea2018.1\system\captureAgent\debugger-agent.jar=file:/C:/Users/tommy/AppData/Local/Temp/capture.props -Dfile.encoding=UTF-8 -classpath "C:\Program Files\Java\jdk1.8.0_181\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\zipfs.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\jfxswt.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\rt.jar;D:\School\CSC435\BlockChain\out\production\Blockchain;D:\School\CSC435\BlockChain\lib\gson-2.8.4.jar;D:\Program Files\JetBrains\IntelliJ IDEA 2018.1\lib\idea_rt.jar" BlockChain 0
+Connected to the target VM, address: '127.0.0.1:65302', transport: 'socket'
+Process 0: Ports:
+		 Public Keys Port: 4710
+		 UnverifiedBlocksPort: 4820
+		 BlockChainPort: 4930
+Process 0: 
+Using input file: BlockInput0.txt
+
+Process 0: Starting the Unverified Block Consumer thread.
+Process 0: waiting on PublicKey
+Process 0: BlockChain Process listening on the port 4930.
+Process 0: Unverified Block Process listening on the port 4820.
+Process 0: PublicKey Process listening on the port 4710.
+Process 0: Public Key Client Connected
+Process 0: Process 0 got a new key: Sun RSA public key, 1024 bits
+  modulus: 90677098070873016806474721960141504691281784076018327296039113573565693494752873934712026789210552347911934537454957795781436984493287090425782709881538870843199041476552910015986916470511300691672189999032367542621813500552310923331455792127490105172092231447514985008770508602484486628957331840884863799861
+  public exponent: 65537
+Process 0: Setting public key
+4 records read.
+Names from input:
+	John Smith
+	Joe Blow
+	Julie Wilson
+	Wayne Blaine
+
+
+Process 0: Unverified Block Client Connected
+Process 0: Unverified Block Client Connected
+Process 0: Received a new Unverified Block
+Process 0: Unverified Block Client Connected
+Process 0: Received a new Unverified Block
+Process 0: Unverified Block Client Connected
+Process 0: Received a new Unverified Block
+Process 0: Received a new Unverified Block
+Process 0: Unverified Block Client Connected
+Process 0: Unverified Block Client Connected
+Process 0: Received a new Unverified Block
+Process 0: Received a new Unverified Block
+Process 0: Unverified Block Client Connected
+Process 0: Received a new Unverified Block
+Process 0: Unverified Block Client Connected
+Process 0: Received a new Unverified Block
+Process 0: Unverified Block Client Connected
+Process 0: Received a new Unverified Block
+Process 0: Unverified Block Client Connected
+Process 0: Unverified Block Client Connected
+Process 0: Received a new Unverified Block
+Process 0: Received a new Unverified Block
+Process 0: Unverified Block Client Connected
+Process 0: Received a new Unverified Block
+Process 0: Unverified Block Client Connected
+Process 0: Received a new Unverified Block
+Process 0: Block Chain Client Connected
+Process 0: Block Chain Client Connected
+Process 0: Block Chain Client Connected
+Process 0: Block Chain Client Connected
+Process 0: Block Chain Client Connected
+Process 0: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Abraham",
+    "LastName": "Lincoln",
+    "SSN": "444-45-6888",
+    "DOB": "1809.02.12",
+    "Diagnosis": "GreviousWound",
+    "Treatment": "Surgery",
+    "Medication": "Whiskey"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "53efed2a7152059a922d765a20d06c3febdb30da8e5f9e16e17c42a42903310e",
+  "SignedSHA256DataBlock": "Zv7KIeWYydLRqI2bUr/IUE+AoSsv1yvL56umDU/AyXqKlZipWcEaIrcYmCcDwXDPSRfOnlMuubo9KWHbuuM9UWtE40ZP2l9yIBPZp+wBtBXB4VAywzDmO5BRxbTZn+ibKbloLkAzZ43Rw79s1bGjbxDWruXhtI6SxAQQtblttl8=",
+  "CreationTime": "Oct 23, 2018 10:23:46 PM",
+  "BlockId": "70ad4750-252c-43c1-aef2-c8694e002a74",
+  "SignedBlockId": "BzDPXbH/Xj/Zi9OGj2V2EKYkFbyCrvYZS8uj+L+g5OSrv+MvM29bBgk8kWc4OiMRdOKUzDvo9FAf1PLElDm/gtxjjNG2wePjAv8E3Qvz4MfBwO8kBcun8yInw3hpkcI1zKxp8j5KCIS7oLr2uWAx5BqMNUZ5hwDxHc2sTDdoO2E=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "2",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 0: Block Chain Client Connected
+Process 0: Block Chain Client Connected
+Process 0: Exporting updated ledger
+Process 0: Exporting updated ledger
+Process 0: Exporting updated ledger
+*********************ERROR********************
+Process 0: Current Ledger Size: 4
+*********************ERROR********************
+*********************ERROR********************
+Process 0: Current Ledger Size: 1
+*********************ERROR********************
+*********************ERROR********************
+Process 0: Current Ledger Size: 4
+*********************ERROR********************
+Process 0: Exporting updated ledger
+Process 0: Exporting updated ledger
+*********************ERROR********************
+Process 0: Current Ledger Size: 4
+*********************ERROR********************
+*********************ERROR********************
+Process 0: Current Ledger Size: 5
+*********************ERROR********************
+Process 0: Exporting updated ledger
+Process 0: Exporting updated ledger
+*********************ERROR********************
+Process 0: Current Ledger Size: 2
+*********************ERROR********************
+Process 0: Block Chain Client Connected
+Process 0: Block Chain Client Connected
+Process 0: Exporting updated ledger
+Process 0: Block Chain Client Connected
+*********************ERROR********************
+Process 0: Current Ledger Size: 5
+*********************ERROR********************
+Process 0: Block Chain Client Connected
+Process 0: Exporting updated ledger
+Process 0: Exporting updated ledger
+*********************ERROR********************
+Process 0: Current Ledger Size: 7
+*********************ERROR********************
+Process 0: Sending updated block ledger
+Process 0: Sending updated block ledger
+Process 0: Sending updated block ledger
+*********************ERROR********************
+Process 0: Current Ledger Size: 7
+*********************ERROR********************
+*********************ERROR********************
+Process 0: Record's data block has an been signed by an invalid private key
+*********************ERROR********************
+*********************ERROR********************
+Process 0: Current Ledger Size: 7
+*********************ERROR********************
+Process 0: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Bruce",
+    "LastName": "Lee",
+    "SSN": "456-789-123",
+    "DOB": "1940.11.27",
+    "Diagnosis": "SoreStomach",
+    "Treatment": "LessCombat",
+    "Medication": "Vicodine"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "59a52c8b5004dd11c16c114cdd28b20113465658b1f7b0427b1e82dd5c253c48",
+  "SignedSHA256DataBlock": "AUrSnq50nLamQY6FX+jcKzEJMH0BQ9I7S1OBeJrr5sNeZVl/T/0t4oGVkVseOPzImbFb/Yg0p54NxGpNeKkkiVheIKCEXqWousrAvG09pIa/SWhQQ2Ze4qcC07XV9YarLgvTdqck8lM2PWUEI8ixkkApGZHIrJLiaYQOP2Oa5Aw=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "9f44be6a-fc98-4234-9522-655de0bcf0ef",
+  "SignedBlockId": "cLyXmSDHwsZBiKComUA8uz3BBYGXniAoo8w2fvZDPvxxkG/dUR0CPIx30eROq/AdHvJpEWPoBBc707wYwzPA2wzptwlw5FgS9oZqG/+5R9lGOYVBi9JHk0sRHj4sXO3FDTLfvWdTOzau2Jpc2jq6d/xn2/Ku6lK2RoEWGZvC+aE=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "1",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 0: Block already verified so wait for next block
+Process 0: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Helen",
+    "LastName": "Keller",
+    "SSN": "666-45-6789",
+    "DOB": "1880.06.27",
+    "Diagnosis": "Arthritis",
+    "Treatment": "WarmCloths",
+    "Medication": "Aspirin"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "c669b5ca867249c640704b2e5a89a5dfcc67d8023c651f88f82047401ed4ea04",
+  "SignedSHA256DataBlock": "QGigrx/W1zdFwCXd/flNmW3buNbfpRnvUT1jiM9U1U774n7Cgc+esMFgnJ67by1ReLIV0IRBLKSIGU058Ru34PF/Uu5NfNWIoaJQW01D5o3Tt2GBE/T9fYsg1Q5esKbhLs5gRNXP/GXnGOESqBrfTmfHafjkNgoc8mOLwe4zgyc=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "bd9fceae-a952-4958-a340-3b2a6f6cf61f",
+  "SignedBlockId": "OyQxk3vxwWXfrvdWO02GXQYgyvieVDRJreHAqeKu9tPrny6MTN05pDvep27+6RmaxJgzC9yctDdQ+sacpWRDHYmlqFgaAGKCNPFbY5xo4Zf3s7KiCHvqxKafaPnZCkqnOUUcL0H3YU8FvRlmxVixfuwQsck6Ux2NiC7Cgs4Qds8=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "2",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 0: Block Chain Client Connected
+Process 0: Block Chain Client Connected
+Process 0: Block already verified so wait for next block
+Process 0: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "John",
+    "LastName": "Smith",
+    "SSN": "123-45-6789",
+    "DOB": "1996.03.07",
+    "Diagnosis": "Chickenpox",
+    "Treatment": "BedRest",
+    "Medication": "aspirin"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "0d5be93aaeabb3499828bdef13f2cdbdf5d5a40191c43bdd918097cadf595c89",
+  "SignedSHA256DataBlock": "W/QIkFiF1PbkkaYo5zGG1CjWUEKRDv1wpGQYfqr2lAyG/V3GOa7a8EyvuqM9dSZKKMdfLb7XORa0Wp++BCgN3tnnfydD5P4oNX1b0QifHPe4fSLiqj8HwrMYscIoB+9+0lDrjN+1XWUvV81sA2u9N/l+HFGkkrUiJkSWar6HPow=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "4ee170c7-bc98-44fb-85c3-2e6dc47465d9",
+  "SignedBlockId": "QWBCN+BHwSlOwKSPcjWwC7D58k0IXzffmvZKphYBlPu1XO+YotsdTGpu8N1UmiVI9RGgc8dVXEnqX4Um7Lp21qLrGXXF2K298Nl26l2qM1Ib4hurm+IB1CU31jKH6/m4/4Emr7Zv2daGfvKB7qVFnkzghZiDEbJs37q04ndwxhQ=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "0",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 0: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Rita",
+    "LastName": "Vita",
+    "SSN": "999-456-789",
+    "DOB": "1992.01.31",
+    "Diagnosis": "ObessivePersonality",
+    "Treatment": "TryToRelax",
+    "Medication": "Ibuprofen"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "6e8dec1cc250835597b8a0284b92c0798ecdf92e5de4be75678eb84f1dc7ae54",
+  "SignedSHA256DataBlock": "FIGIvS7tUL+DHPzy+VhXidtr/8/aZHLHUcfuVVYvdRjmW0Lm4W5SnNrTpg0XeIPxejTcoTylQcITeWZ5a5zxzkCF8tKwanwSYzaXerAg3isBOgGHxZxlNI0OaWljCtpnGQWtMTsRwDMW3mlzKDj54kmIfM0QjAXzOFzqKiuZrPo=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "4ce25fc8-844c-454d-8c9c-b162f8e3bdc4",
+  "SignedBlockId": "GRsjlSOuew3vmPBstHNoK5tnYvAl/Weo6LBvwgeupieCToVzBXNZnjR27CFV+forU0y9Toxgq63aE0g34iWR/7r5N/q7wwfkUnXgmpEIt3IriB1eXqIow8A8xXtJYiVVO4KsN0JMVcMoOYHKQlHdHXhZndNj0WBgz9WB9KzvOXY=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "1",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 0: Sending updated block ledger
+Process 0: Sending updated block ledger
+Process 0: Block Chain Client Connected
+Process 0: Sending updated block ledger
+Process 0: Exporting updated ledger
+Process 0: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Joe",
+    "LastName": "Blow",
+    "SSN": "123-45-6888",
+    "DOB": "1996.03.07",
+    "Diagnosis": "Smallpox",
+    "Treatment": "BedRest",
+    "Medication": "Whiskey"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "dcfe29bb2c75178d1884030542dcbbbff7f840eb2df6ccd626ef0d2473416c3c",
+  "SignedSHA256DataBlock": "Os2RK5xR/eWDt7I3tScMvLAN9KG5X4YMhkE+mx6962o7CCKvSgeg4rjwmW33SYtsNGm4vIsG+/PhxqI9/bRitb/bRlXiBpjIF4WgNtBukYXlY1FcyizKqO1HPmJsDjQTZ5tPgepjU5FUhipggUnFENpgwTYamF/6Mym2eP9sAwE=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "505cd721-0482-4c7c-af18-08a5415d723e",
+  "SignedBlockId": "XZWgaB8DPmrTQOWBp58jlSq0NoDHuUx1nDuIjK1A6ZodAaKlAjh67iQgaEbW/V94xk/UUbsK9VGGj0hC7h5RO/UbaHU0o7pgxM5vEZc+vNRWG1ChFpHhre7xhCoJG/eKZKHy5HA5FP47VdI9CpJYjLrIwYYHsNBRU2malVL97nY=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "0",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 0: Exporting updated ledger
+Process 0: Sending updated block ledger
+Process 0: Exporting updated ledger
+*********************ERROR********************
+Process 0: Record's data block has an been signed by an invalid private key
+*********************ERROR********************
+*********************ERROR********************
+Process 0: Current Ledger Size: 6
+*********************ERROR********************
+Process 0: Sending updated block ledger
+*********************ERROR********************
+Process 0: Current Ledger Size: 6
+*********************ERROR********************
+Process 0: Exporting updated ledger
+Process 0: Block Chain Client Connected
+Process 0: Block Chain Client Connected
+Process 0: Sending updated block ledger
+Process 0: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Wei",
+    "LastName": "Xu",
+    "SSN": "123-456-333",
+    "DOB": "1996.03.22",
+    "Diagnosis": "Shingles",
+    "Treatment": "WaitForRelief",
+    "Medication": "Zovirax"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "81d4307e3955716185582bb0562f4fc86e330422f3c81ac8ccd73f8dcfcda9a1",
+  "SignedSHA256DataBlock": "d1sSsj4rb3YJNkaizYRugl+hC2lqjI5kiHVyYs1CE7r2HPCii/iaXloRv6zwAOnI9QJ1/N8Sdfld3oCw4SlrmXI5CRvE6cQ1+RiOhYxRI/hP09Q+TA2XYjVXFgbf1nk2JHA6LUig2B3vZ52qX68FRvmCbqqMr5byxMXXSt2Bj7M=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "701e3ddb-3171-4989-aa2d-b322250c1c8f",
+  "SignedBlockId": "GO0lEeXz+2k0TPiJLbMZOhMROLUCfSODqjcFQXhqmIZhWi+DdD0hAYnJ+grM6FBeD3md9Mu0+gq1jCHKLvu3Y7GYb7QanGJY1Zq+TKBhCq+3cbidilELQrlDHzNjuB0maLlA3bE6+Vp5J2Az/74QslWKhxZkDelaSFT8XlYtNzA=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "1",
+  "PreviousHash": "",
+  "Seed": ""
+}
+*********************ERROR********************
+Process 0: Current Ledger Size: 6
+*********************ERROR********************
+*********************ERROR********************
+Process 0: Current Ledger Size: 6
+*********************ERROR********************
+Process 0: Sending updated block ledger
+Process 0: Exporting updated ledger
+Process 0: Sending updated block ledger
+Process 0: Block Chain Client Connected
+*********************ERROR********************
+Process 0: Current Ledger Size: 8
+*********************ERROR********************
+*********************ERROR********************
+Process 0: Record's data block has an been signed by an invalid private key
+*********************ERROR********************
+Process 0: Sending updated block ledger
+Process 0: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Wayne",
+    "LastName": "Blaine",
+    "SSN": "123-45-6777",
+    "DOB": "1942.07.07",
+    "Diagnosis": "Measles",
+    "Treatment": "WaitToGetBetter",
+    "Medication": "CodLiverOil"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "4c61939ac627aeb0b89b8e0e4649498b16b4a58a469c5dffb54cded6daaacf1b",
+  "SignedSHA256DataBlock": "Os2RK5xR/eWDt7I3tScMvLAN9KG5X4YMhkE+mx6962o7CCKvSgeg4rjwmW33SYtsNGm4vIsG+/PhxqI9/bRitb/bRlXiBpjIF4WgNtBukYXlY1FcyizKqO1HPmJsDjQTZ5tPgepjU5FUhipggUnFENpgwTYamF/6Mym2eP9sAwE=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "dfc551a0-cdd6-4946-8787-a2da7ca3d1ad",
+  "SignedBlockId": "FodbbZg08qYJQiP0qSm49TbJLXOhmYw12ToMyQ/fhFSpjzdidQTM2O0BqEl1yDgM4tWm/+xVN/KqRoFDYJ42N7wMSkA0pV52dNC0vze4AsgA6jBnoiDzpsUkjXI7T0RRUJLxxFSe9r1Q/k02jOobwrwT+13VnBzu4lmgONbVcvQ=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "0",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 0: Block already verified so wait for next block
+Process 0: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Julie",
+    "LastName": "Wilson",
+    "SSN": "123-45-6999",
+    "DOB": "1996.03.07",
+    "Diagnosis": "Insomnia",
+    "Treatment": "Exercise",
+    "Medication": "HotPeppers"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "28ce2cc53e5149603ab2f0997ee43cca9d9172d3bd437e7774e3cee9e587a7b3",
+  "SignedSHA256DataBlock": "Vy/XC6a5wTRZ3F0hSqMdrp4H+oQuT1iXWKHutJjiCushgYBtCEqzGzkX0A79xM0K+Lrmvc6uBNMZnQij4NOcRH01FFskmHfihJisZJVF85GsD77FU3vZ4eva+MVsADEOvFdJfAwLvqWCQ9PvbUn/T+RnSymWS8IiMYXuwp+ENSg=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "44c1e462-3065-4802-8d2c-8be3f7b61b5d",
+  "SignedBlockId": "ITW+/nw0a4Zj2Ic+7Pf9wncGyiOLVnQQZhrzZiHg7t53c4slTMukiaGYchFac1dDUGcYsTbhhSAviDhLuFrKHZ2Ul17G6ahC/H8eSBhShphKuN36KQU8rKmvafSyubCAwUs92akwf8WPncAadbSO4XyKZEKDDRp41uGP789H+jo=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "0",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 0: Exporting updated ledger
+Process 0: Block already verified so wait for next block
+Process 0: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Sally",
+    "LastName": "McCutty",
+    "SSN": "123-456-999",
+    "DOB": "1970.01.01",
+    "Diagnosis": "Migraine",
+    "Treatment": "IcePack",
+    "Medication": "Almotriptan"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "aff6c698b1af261c3fc6b343138b4540e2ae2ef5c19a996705f9d7cc4da67b87",
+  "SignedSHA256DataBlock": "AUrSnq50nLamQY6FX+jcKzEJMH0BQ9I7S1OBeJrr5sNeZVl/T/0t4oGVkVseOPzImbFb/Yg0p54NxGpNeKkkiVheIKCEXqWousrAvG09pIa/SWhQQ2Ze4qcC07XV9YarLgvTdqck8lM2PWUEI8ixkkApGZHIrJLiaYQOP2Oa5Aw=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "b916cd22-1910-4f29-9e93-af7298a83c79",
+  "SignedBlockId": "VaGup67idgUOc7ws4nLo9h6WMHti3aRBP4+WveYxCfnCwUyRGKu8h7mmNB6enPJu5mQhJprOEqJa/H/RnKqMoRljSmhRktPOzOgJAJUNhm6JTS7RwezuiA7BWeKXoMTg21+w3EFyxktcVbAXmDGdtWv32BLBV496cGHMAj08S6E=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "1",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 0: Block already verified so wait for next block
+Process 0: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "",
+    "LastName": "",
+    "SSN": "",
+    "DOB": "",
+    "Diagnosis": "",
+    "Treatment": "",
+    "Medication": ""
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "e864138cae72e7954d150baa3313be7622ed31e271fdee26f53219c67e954b5d",
+  "SignedSHA256DataBlock": "WEfX7NA535UgK3EwyDHCyy2aW1y2mKX+yPl9oism46Qu0RwJ/KK4ajZTzY5sunnu4mdrZlS2+e5NvmZg8HOLEa829TR48eq5mz0ZPmF1X9CWw0QprGmFlZZlG4fhA4PlNH8zK8UP0FlZeIKIqV9iGtzAno8tMwC8wSxG/9Wx9eY=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "0",
+  "SignedBlockId": "MasMlS3rKupjqhvH93fkQW2UjwbN5vZMZsIKjTVij0EAky8V9LA+ZL5BK5VNmXKAAAV9QrEsg0Os78Yl04TH7qvu8FDU6kXmHk3Dl6OtcVO+IIcKGExVBky+C93Jwr8bGrO8Yu1hb6kaUgDWsLosXLa+VGdIy9hOMdXjRm2VWUc=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "0",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 0: Exporting updated ledger
+Process 0: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "John",
+    "LastName": "Kennedy",
+    "SSN": "333-45-6999",
+    "DOB": "1917.05.29",
+    "Diagnosis": "AddisonsDisease",
+    "Treatment": "DrugTherapy",
+    "Medication": "Steroids"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "ab9fc5ea88fca8a01ae676f902d55393e8940aee608944cca5d367fdb0b5ca76",
+  "SignedSHA256DataBlock": "MLdnV5UNhZxFh4ZgindNwNM7cSCkUfvP3vbF5lHITDcJT7u7lCH9B3U7roncBKPdK0KoLerA/E6iJF2A1xu7p4fFHqmP07u4uLkCWOI8/pDWy8Bpnwzkr/cUQuc2vpT1KzzNnWSFcnfyjtuCAk2Q20voo+d8z/qrg1fbBVLxOCc=",
+  "CreationTime": "Oct 23, 2018 10:23:46 PM",
+  "BlockId": "8ad0098d-2769-4d5b-a6e8-49fd5ca6dba8",
+  "SignedBlockId": "ESNUrYf+IXUYrwLTNuOXNzou7ReqfQvfquNPxSRYF5VIgJl1Vy0DtNp0eou5tGRxFIKMBv+mczMTbysZjcWrSOnzqSBo6/xp7Ib1+SseU+2j7Krn5hsV+uiqDbm1u4pMDgHBGXW8YczKtWgxYCqKZMPErMgzT4ZHFKK28YGGeXQ=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "2",
+  "PreviousHash": "",
+  "Seed": ""
+}
+*********************ERROR********************
+Process 0: Current Ledger Size: 8
+*********************ERROR********************
+*********************ERROR********************
+Process 0: Record's data block has an been signed by an invalid private key
+*********************ERROR********************
+*********************ERROR********************
+Process 0: Current Ledger Size: 7
+*********************ERROR********************
+Process 0: Sending updated block ledger
+Process 0: Sending updated block ledger
+Process 0: Sending updated block ledger
+Process 0: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Joe",
+    "LastName": "DiMaggio",
+    "SSN": "111-22-3333",
+    "DOB": "1914.11.25",
+    "Diagnosis": "SoreKnees",
+    "Treatment": "RestFromSports",
+    "Medication": "Aspirin"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "670bb01430e160db7d1ecdf38da49610e512ce235b2ac7380042c9187d185326",
+  "SignedSHA256DataBlock": "YhJRn8DiiIotlrD2hms59AjZ1B4wJGWopMDjbWFsw4N6WE1jeYr0P/TtboVb5lmyg9bYE1eT8AFeNELXCWh5MAfcV4Y+X9TtBQrfEJnhD2PDy4yUquIuen77Q8DLumCYoDqolyhz9kAmcgy5sx6LXQx9XsPorR6JH8vJhRg9yt8=",
+  "CreationTime": "Oct 23, 2018 10:23:46 PM",
+  "BlockId": "69310bfc-c4e3-4cfc-accc-2870ba585bcf",
+  "SignedBlockId": "Va/mAIzDtPPVUkHoKRxG7Y0pjeM0GYDEQ4KGMuGjrYBahdVlqHVMdyEWfUq3+N5U03zQ3YCjOpIPR0HnQL9NBTOJ25FfTkp/BEy7c550jg+HpFza0Wf8jqXTH3c5cX9s2FkD5IKuzdiULs7oV2Qol6AkEKoCJYlO0cN58yg/ySo=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "2",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 0: Sending updated block ledger
+Process 0: Sending updated block ledger
+Process 0: Sending updated block ledger
+Process 0: Block Chain Client Connected
+Process 0: Block Chain Client Connected
+Process 0: Exporting updated ledger
+*********************ERROR********************
+Process 0: Current Ledger Size: 8
+*********************ERROR********************
+Process 0: Exporting updated ledger
+*********************ERROR********************
+Process 0: Current Ledger Size: 9
+*********************ERROR********************
+Process 0: Block Chain Client Connected
+*********************ERROR********************
+Process 0: Current Ledger Size: 7
+*********************ERROR********************
+Process 0: Exporting updated ledger
+Process 0: Block Chain Client Connected
+Process 0: Exporting updated ledger
+*********************ERROR********************
+Process 0: Current Ledger Size: 8
+*********************ERROR********************
+Process 0: Block Chain Client Connected
+*********************ERROR********************
+Process 0: Current Ledger Size: 9
+*********************ERROR********************
+Process 0: Exporting updated ledger
+Process 0: Block Chain Client Connected
+Process 0: Block Chain Client Connected
+Process 0: Exporting updated ledger
+*********************ERROR********************
+Process 0: Current Ledger Size: 10
+*********************ERROR********************
+*********************ERROR********************
+Process 0: Current Ledger Size: 10
+*********************ERROR********************
+Process 0: Exporting updated ledger
+Process 0: Block Chain Client Connected
+Process 0: Exporting updated ledger
+Process 0: Block Chain Client Connected
+*********************ERROR********************
+Process 0: Current Ledger Size: 11
+*********************ERROR********************
+Process 0: Exporting updated ledger
+*********************ERROR********************
+Process 0: Current Ledger Size: 12
+*********************ERROR********************
+Disconnected from the target VM, address: '127.0.0.1:65302', transport: 'socket'
+
+Process finished with exit code -1
+
+
+PROCESS 1:
+
+"C:\Program Files\Java\jdk1.8.0_181\bin\java" -agentlib:jdwp=transport=dt_socket,address=127.0.0.1:65307,suspend=y,server=n -javaagent:C:\Users\tommy\AppData\Local\Temp\capture3436jars\debugger-agent.jar=file:/C:/Users/tommy/AppData/Local/Temp/capture.props -Dfile.encoding=UTF-8 -classpath "C:\Program Files\Java\jdk1.8.0_181\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\zipfs.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\jfxswt.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\rt.jar;D:\School\CSC435\BlockChain\out\production\Blockchain;D:\School\CSC435\BlockChain\lib\gson-2.8.4.jar;D:\Program Files\JetBrains\IntelliJ IDEA 2018.1\lib\idea_rt.jar" BlockChain 1
+Connected to the target VM, address: '127.0.0.1:65307', transport: 'socket'
+Process 1: Ports:
+		 Public Keys Port: 4711
+		 UnverifiedBlocksPort: 4821
+		 BlockChainPort: 4931
+Process 1: 
+Using input file: BlockInput1.txt
+
+Process 1: Starting the Unverified Block Consumer thread.
+Process 1: waiting on PublicKey
+Process 1: Unverified Block Process listening on the port 4821.
+Process 1: BlockChain Process listening on the port 4931.
+Process 1: PublicKey Process listening on the port 4711.
+Process 1: Public Key Client Connected
+Process 1: Process 1 got a new key: Sun RSA public key, 1024 bits
+  modulus: 90677098070873016806474721960141504691281784076018327296039113573565693494752873934712026789210552347911934537454957795781436984493287090425782709881538870843199041476552910015986916470511300691672189999032367542621813500552310923331455792127490105172092231447514985008770508602484486628957331840884863799861
+  public exponent: 65537
+Process 1: Setting public key
+4 records read.
+Names from input:
+	Rita Vita
+	Wei Xu
+	Sally McCutty
+	Bruce Lee
+
+
+Process 1: Unverified Block Client Connected
+Process 1: Unverified Block Client Connected
+Process 1: Received a new Unverified Block
+Process 1: Received a new Unverified Block
+Process 1: Unverified Block Client Connected
+Process 1: Received a new Unverified Block
+Process 1: Unverified Block Client Connected
+Process 1: Received a new Unverified Block
+Process 1: Unverified Block Client Connected
+Process 1: Unverified Block Client Connected
+Process 1: Received a new Unverified Block
+Process 1: Received a new Unverified Block
+Process 1: Unverified Block Client Connected
+Process 1: Received a new Unverified Block
+Process 1: Unverified Block Client Connected
+Process 1: Received a new Unverified Block
+Process 1: Unverified Block Client Connected
+Process 1: Received a new Unverified Block
+Process 1: Unverified Block Client Connected
+Process 1: Received a new Unverified Block
+Process 1: Unverified Block Client Connected
+Process 1: Received a new Unverified Block
+Process 1: Unverified Block Client Connected
+Process 1: Received a new Unverified Block
+Process 1: Unverified Block Client Connected
+Process 1: Received a new Unverified Block
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Block Chain Client Connected
+Process 1: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "",
+    "LastName": "",
+    "SSN": "",
+    "DOB": "",
+    "Diagnosis": "",
+    "Treatment": "",
+    "Medication": ""
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "e864138cae72e7954d150baa3313be7622ed31e271fdee26f53219c67e954b5d",
+  "SignedSHA256DataBlock": "WEfX7NA535UgK3EwyDHCyy2aW1y2mKX+yPl9oism46Qu0RwJ/KK4ajZTzY5sunnu4mdrZlS2+e5NvmZg8HOLEa829TR48eq5mz0ZPmF1X9CWw0QprGmFlZZlG4fhA4PlNH8zK8UP0FlZeIKIqV9iGtzAno8tMwC8wSxG/9Wx9eY=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "0",
+  "SignedBlockId": "MasMlS3rKupjqhvH93fkQW2UjwbN5vZMZsIKjTVij0EAky8V9LA+ZL5BK5VNmXKAAAV9QrEsg0Os78Yl04TH7qvu8FDU6kXmHk3Dl6OtcVO+IIcKGExVBky+C93Jwr8bGrO8Yu1hb6kaUgDWsLosXLa+VGdIy9hOMdXjRm2VWUc=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "0",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 1: Block already verified so wait for next block
+Process 1: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Sally",
+    "LastName": "McCutty",
+    "SSN": "123-456-999",
+    "DOB": "1970.01.01",
+    "Diagnosis": "Migraine",
+    "Treatment": "IcePack",
+    "Medication": "Almotriptan"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "aff6c698b1af261c3fc6b343138b4540e2ae2ef5c19a996705f9d7cc4da67b87",
+  "SignedSHA256DataBlock": "AUrSnq50nLamQY6FX+jcKzEJMH0BQ9I7S1OBeJrr5sNeZVl/T/0t4oGVkVseOPzImbFb/Yg0p54NxGpNeKkkiVheIKCEXqWousrAvG09pIa/SWhQQ2Ze4qcC07XV9YarLgvTdqck8lM2PWUEI8ixkkApGZHIrJLiaYQOP2Oa5Aw=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "b916cd22-1910-4f29-9e93-af7298a83c79",
+  "SignedBlockId": "VaGup67idgUOc7ws4nLo9h6WMHti3aRBP4+WveYxCfnCwUyRGKu8h7mmNB6enPJu5mQhJprOEqJa/H/RnKqMoRljSmhRktPOzOgJAJUNhm6JTS7RwezuiA7BWeKXoMTg21+w3EFyxktcVbAXmDGdtWv32BLBV496cGHMAj08S6E=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "1",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 1: Block already verified so wait for next block
+Process 1: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Joe",
+    "LastName": "Blow",
+    "SSN": "123-45-6888",
+    "DOB": "1996.03.07",
+    "Diagnosis": "Smallpox",
+    "Treatment": "BedRest",
+    "Medication": "Whiskey"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "dcfe29bb2c75178d1884030542dcbbbff7f840eb2df6ccd626ef0d2473416c3c",
+  "SignedSHA256DataBlock": "Os2RK5xR/eWDt7I3tScMvLAN9KG5X4YMhkE+mx6962o7CCKvSgeg4rjwmW33SYtsNGm4vIsG+/PhxqI9/bRitb/bRlXiBpjIF4WgNtBukYXlY1FcyizKqO1HPmJsDjQTZ5tPgepjU5FUhipggUnFENpgwTYamF/6Mym2eP9sAwE=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "505cd721-0482-4c7c-af18-08a5415d723e",
+  "SignedBlockId": "XZWgaB8DPmrTQOWBp58jlSq0NoDHuUx1nDuIjK1A6ZodAaKlAjh67iQgaEbW/V94xk/UUbsK9VGGj0hC7h5RO/UbaHU0o7pgxM5vEZc+vNRWG1ChFpHhre7xhCoJG/eKZKHy5HA5FP47VdI9CpJYjLrIwYYHsNBRU2malVL97nY=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "0",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 1: Sending updated block ledger
+Process 1: Sending updated block ledger
+Process 1: Block Chain Client Connected
+*********************ERROR********************
+Process 1: Record's data block has an been signed by an invalid private key
+*********************ERROR********************
+*********************ERROR********************
+Process 1: Record's data block has an been signed by an invalid private key
+*********************ERROR********************
+Process 1: Sending updated block ledger
+Process 1: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Helen",
+    "LastName": "Keller",
+    "SSN": "666-45-6789",
+    "DOB": "1880.06.27",
+    "Diagnosis": "Arthritis",
+    "Treatment": "WarmCloths",
+    "Medication": "Aspirin"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "c669b5ca867249c640704b2e5a89a5dfcc67d8023c651f88f82047401ed4ea04",
+  "SignedSHA256DataBlock": "QGigrx/W1zdFwCXd/flNmW3buNbfpRnvUT1jiM9U1U774n7Cgc+esMFgnJ67by1ReLIV0IRBLKSIGU058Ru34PF/Uu5NfNWIoaJQW01D5o3Tt2GBE/T9fYsg1Q5esKbhLs5gRNXP/GXnGOESqBrfTmfHafjkNgoc8mOLwe4zgyc=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "bd9fceae-a952-4958-a340-3b2a6f6cf61f",
+  "SignedBlockId": "OyQxk3vxwWXfrvdWO02GXQYgyvieVDRJreHAqeKu9tPrny6MTN05pDvep27+6RmaxJgzC9yctDdQ+sacpWRDHYmlqFgaAGKCNPFbY5xo4Zf3s7KiCHvqxKafaPnZCkqnOUUcL0H3YU8FvRlmxVixfuwQsck6Ux2NiC7Cgs4Qds8=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "2",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 1: Block already verified so wait for next block
+Process 1: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Wayne",
+    "LastName": "Blaine",
+    "SSN": "123-45-6777",
+    "DOB": "1942.07.07",
+    "Diagnosis": "Measles",
+    "Treatment": "WaitToGetBetter",
+    "Medication": "CodLiverOil"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "4c61939ac627aeb0b89b8e0e4649498b16b4a58a469c5dffb54cded6daaacf1b",
+  "SignedSHA256DataBlock": "Os2RK5xR/eWDt7I3tScMvLAN9KG5X4YMhkE+mx6962o7CCKvSgeg4rjwmW33SYtsNGm4vIsG+/PhxqI9/bRitb/bRlXiBpjIF4WgNtBukYXlY1FcyizKqO1HPmJsDjQTZ5tPgepjU5FUhipggUnFENpgwTYamF/6Mym2eP9sAwE=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "dfc551a0-cdd6-4946-8787-a2da7ca3d1ad",
+  "SignedBlockId": "FodbbZg08qYJQiP0qSm49TbJLXOhmYw12ToMyQ/fhFSpjzdidQTM2O0BqEl1yDgM4tWm/+xVN/KqRoFDYJ42N7wMSkA0pV52dNC0vze4AsgA6jBnoiDzpsUkjXI7T0RRUJLxxFSe9r1Q/k02jOobwrwT+13VnBzu4lmgONbVcvQ=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "0",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 1: Block already verified so wait for next block
+Process 1: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Bruce",
+    "LastName": "Lee",
+    "SSN": "456-789-123",
+    "DOB": "1940.11.27",
+    "Diagnosis": "SoreStomach",
+    "Treatment": "LessCombat",
+    "Medication": "Vicodine"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "59a52c8b5004dd11c16c114cdd28b20113465658b1f7b0427b1e82dd5c253c48",
+  "SignedSHA256DataBlock": "AUrSnq50nLamQY6FX+jcKzEJMH0BQ9I7S1OBeJrr5sNeZVl/T/0t4oGVkVseOPzImbFb/Yg0p54NxGpNeKkkiVheIKCEXqWousrAvG09pIa/SWhQQ2Ze4qcC07XV9YarLgvTdqck8lM2PWUEI8ixkkApGZHIrJLiaYQOP2Oa5Aw=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "9f44be6a-fc98-4234-9522-655de0bcf0ef",
+  "SignedBlockId": "cLyXmSDHwsZBiKComUA8uz3BBYGXniAoo8w2fvZDPvxxkG/dUR0CPIx30eROq/AdHvJpEWPoBBc707wYwzPA2wzptwlw5FgS9oZqG/+5R9lGOYVBi9JHk0sRHj4sXO3FDTLfvWdTOzau2Jpc2jq6d/xn2/Ku6lK2RoEWGZvC+aE=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "1",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 1: Sending updated block ledger
+*********************ERROR********************
+Process 1: Record's data block has an been signed by an invalid private key
+*********************ERROR********************
+*********************ERROR********************
+Process 1: Record's data block has an been signed by an invalid private key
+*********************ERROR********************
+Process 1: Sending updated block ledger
+Process 1: Block Chain Client Connected
+Process 1: Sending updated block ledger
+Process 1: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "John",
+    "LastName": "Smith",
+    "SSN": "123-45-6789",
+    "DOB": "1996.03.07",
+    "Diagnosis": "Chickenpox",
+    "Treatment": "BedRest",
+    "Medication": "aspirin"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "0d5be93aaeabb3499828bdef13f2cdbdf5d5a40191c43bdd918097cadf595c89",
+  "SignedSHA256DataBlock": "W/QIkFiF1PbkkaYo5zGG1CjWUEKRDv1wpGQYfqr2lAyG/V3GOa7a8EyvuqM9dSZKKMdfLb7XORa0Wp++BCgN3tnnfydD5P4oNX1b0QifHPe4fSLiqj8HwrMYscIoB+9+0lDrjN+1XWUvV81sA2u9N/l+HFGkkrUiJkSWar6HPow=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "4ee170c7-bc98-44fb-85c3-2e6dc47465d9",
+  "SignedBlockId": "QWBCN+BHwSlOwKSPcjWwC7D58k0IXzffmvZKphYBlPu1XO+YotsdTGpu8N1UmiVI9RGgc8dVXEnqX4Um7Lp21qLrGXXF2K298Nl26l2qM1Ib4hurm+IB1CU31jKH6/m4/4Emr7Zv2daGfvKB7qVFnkzghZiDEbJs37q04ndwxhQ=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "0",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 1: Block already verified so wait for next block
+Process 1: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Rita",
+    "LastName": "Vita",
+    "SSN": "999-456-789",
+    "DOB": "1992.01.31",
+    "Diagnosis": "ObessivePersonality",
+    "Treatment": "TryToRelax",
+    "Medication": "Ibuprofen"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "6e8dec1cc250835597b8a0284b92c0798ecdf92e5de4be75678eb84f1dc7ae54",
+  "SignedSHA256DataBlock": "FIGIvS7tUL+DHPzy+VhXidtr/8/aZHLHUcfuVVYvdRjmW0Lm4W5SnNrTpg0XeIPxejTcoTylQcITeWZ5a5zxzkCF8tKwanwSYzaXerAg3isBOgGHxZxlNI0OaWljCtpnGQWtMTsRwDMW3mlzKDj54kmIfM0QjAXzOFzqKiuZrPo=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "4ce25fc8-844c-454d-8c9c-b162f8e3bdc4",
+  "SignedBlockId": "GRsjlSOuew3vmPBstHNoK5tnYvAl/Weo6LBvwgeupieCToVzBXNZnjR27CFV+forU0y9Toxgq63aE0g34iWR/7r5N/q7wwfkUnXgmpEIt3IriB1eXqIow8A8xXtJYiVVO4KsN0JMVcMoOYHKQlHdHXhZndNj0WBgz9WB9KzvOXY=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "1",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 1: Sending updated block ledger
+Process 1: Sending updated block ledger
+Process 1: Sending updated block ledger
+Process 1: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Julie",
+    "LastName": "Wilson",
+    "SSN": "123-45-6999",
+    "DOB": "1996.03.07",
+    "Diagnosis": "Insomnia",
+    "Treatment": "Exercise",
+    "Medication": "HotPeppers"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "28ce2cc53e5149603ab2f0997ee43cca9d9172d3bd437e7774e3cee9e587a7b3",
+  "SignedSHA256DataBlock": "Vy/XC6a5wTRZ3F0hSqMdrp4H+oQuT1iXWKHutJjiCushgYBtCEqzGzkX0A79xM0K+Lrmvc6uBNMZnQij4NOcRH01FFskmHfihJisZJVF85GsD77FU3vZ4eva+MVsADEOvFdJfAwLvqWCQ9PvbUn/T+RnSymWS8IiMYXuwp+ENSg=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "44c1e462-3065-4802-8d2c-8be3f7b61b5d",
+  "SignedBlockId": "ITW+/nw0a4Zj2Ic+7Pf9wncGyiOLVnQQZhrzZiHg7t53c4slTMukiaGYchFac1dDUGcYsTbhhSAviDhLuFrKHZ2Ul17G6ahC/H8eSBhShphKuN36KQU8rKmvafSyubCAwUs92akwf8WPncAadbSO4XyKZEKDDRp41uGP789H+jo=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "0",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 1: Block already verified so wait for next block
+Process 1: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Wei",
+    "LastName": "Xu",
+    "SSN": "123-456-333",
+    "DOB": "1996.03.22",
+    "Diagnosis": "Shingles",
+    "Treatment": "WaitForRelief",
+    "Medication": "Zovirax"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "81d4307e3955716185582bb0562f4fc86e330422f3c81ac8ccd73f8dcfcda9a1",
+  "SignedSHA256DataBlock": "d1sSsj4rb3YJNkaizYRugl+hC2lqjI5kiHVyYs1CE7r2HPCii/iaXloRv6zwAOnI9QJ1/N8Sdfld3oCw4SlrmXI5CRvE6cQ1+RiOhYxRI/hP09Q+TA2XYjVXFgbf1nk2JHA6LUig2B3vZ52qX68FRvmCbqqMr5byxMXXSt2Bj7M=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "701e3ddb-3171-4989-aa2d-b322250c1c8f",
+  "SignedBlockId": "GO0lEeXz+2k0TPiJLbMZOhMROLUCfSODqjcFQXhqmIZhWi+DdD0hAYnJ+grM6FBeD3md9Mu0+gq1jCHKLvu3Y7GYb7QanGJY1Zq+TKBhCq+3cbidilELQrlDHzNjuB0maLlA3bE6+Vp5J2Az/74QslWKhxZkDelaSFT8XlYtNzA=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "1",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 1: Sending updated block ledger
+Process 1: Block Chain Client Connected
+Process 1: Sending updated block ledger
+Process 1: Sending updated block ledger
+Process 1: Block Chain Client Connected
+Process 1: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Abraham",
+    "LastName": "Lincoln",
+    "SSN": "444-45-6888",
+    "DOB": "1809.02.12",
+    "Diagnosis": "GreviousWound",
+    "Treatment": "Surgery",
+    "Medication": "Whiskey"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "53efed2a7152059a922d765a20d06c3febdb30da8e5f9e16e17c42a42903310e",
+  "SignedSHA256DataBlock": "Zv7KIeWYydLRqI2bUr/IUE+AoSsv1yvL56umDU/AyXqKlZipWcEaIrcYmCcDwXDPSRfOnlMuubo9KWHbuuM9UWtE40ZP2l9yIBPZp+wBtBXB4VAywzDmO5BRxbTZn+ibKbloLkAzZ43Rw79s1bGjbxDWruXhtI6SxAQQtblttl8=",
+  "CreationTime": "Oct 23, 2018 10:23:46 PM",
+  "BlockId": "70ad4750-252c-43c1-aef2-c8694e002a74",
+  "SignedBlockId": "BzDPXbH/Xj/Zi9OGj2V2EKYkFbyCrvYZS8uj+L+g5OSrv+MvM29bBgk8kWc4OiMRdOKUzDvo9FAf1PLElDm/gtxjjNG2wePjAv8E3Qvz4MfBwO8kBcun8yInw3hpkcI1zKxp8j5KCIS7oLr2uWAx5BqMNUZ5hwDxHc2sTDdoO2E=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "2",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 1: Sending updated block ledger
+Process 1: Sending updated block ledger
+Process 1: Block Chain Client Connected
+Process 1: Sending updated block ledger
+Process 1: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "John",
+    "LastName": "Kennedy",
+    "SSN": "333-45-6999",
+    "DOB": "1917.05.29",
+    "Diagnosis": "AddisonsDisease",
+    "Treatment": "DrugTherapy",
+    "Medication": "Steroids"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "ab9fc5ea88fca8a01ae676f902d55393e8940aee608944cca5d367fdb0b5ca76",
+  "SignedSHA256DataBlock": "MLdnV5UNhZxFh4ZgindNwNM7cSCkUfvP3vbF5lHITDcJT7u7lCH9B3U7roncBKPdK0KoLerA/E6iJF2A1xu7p4fFHqmP07u4uLkCWOI8/pDWy8Bpnwzkr/cUQuc2vpT1KzzNnWSFcnfyjtuCAk2Q20voo+d8z/qrg1fbBVLxOCc=",
+  "CreationTime": "Oct 23, 2018 10:23:46 PM",
+  "BlockId": "8ad0098d-2769-4d5b-a6e8-49fd5ca6dba8",
+  "SignedBlockId": "ESNUrYf+IXUYrwLTNuOXNzou7ReqfQvfquNPxSRYF5VIgJl1Vy0DtNp0eou5tGRxFIKMBv+mczMTbysZjcWrSOnzqSBo6/xp7Ib1+SseU+2j7Krn5hsV+uiqDbm1u4pMDgHBGXW8YczKtWgxYCqKZMPErMgzT4ZHFKK28YGGeXQ=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "2",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 1: Sending updated block ledger
+Process 1: Sending updated block ledger
+Process 1: Sending updated block ledger
+Process 1: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Joe",
+    "LastName": "DiMaggio",
+    "SSN": "111-22-3333",
+    "DOB": "1914.11.25",
+    "Diagnosis": "SoreKnees",
+    "Treatment": "RestFromSports",
+    "Medication": "Aspirin"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "670bb01430e160db7d1ecdf38da49610e512ce235b2ac7380042c9187d185326",
+  "SignedSHA256DataBlock": "YhJRn8DiiIotlrD2hms59AjZ1B4wJGWopMDjbWFsw4N6WE1jeYr0P/TtboVb5lmyg9bYE1eT8AFeNELXCWh5MAfcV4Y+X9TtBQrfEJnhD2PDy4yUquIuen77Q8DLumCYoDqolyhz9kAmcgy5sx6LXQx9XsPorR6JH8vJhRg9yt8=",
+  "CreationTime": "Oct 23, 2018 10:23:46 PM",
+  "BlockId": "69310bfc-c4e3-4cfc-accc-2870ba585bcf",
+  "SignedBlockId": "Va/mAIzDtPPVUkHoKRxG7Y0pjeM0GYDEQ4KGMuGjrYBahdVlqHVMdyEWfUq3+N5U03zQ3YCjOpIPR0HnQL9NBTOJ25FfTkp/BEy7c550jg+HpFza0Wf8jqXTH3c5cX9s2FkD5IKuzdiULs7oV2Qol6AkEKoCJYlO0cN58yg/ySo=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "2",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 1: Block Chain Client Connected
+Process 1: Sending updated block ledger
+Process 1: Sending updated block ledger
+Process 1: Sending updated block ledger
+Process 1: Block Chain Client Connected
+Disconnected from the target VM, address: '127.0.0.1:65307', transport: 'socket'
+
+Process finished with exit code -1
+
+
+Process 2:
+"C:\Program Files\Java\jdk1.8.0_181\bin\java" -agentlib:jdwp=transport=dt_socket,address=127.0.0.1:65312,suspend=y,server=n -javaagent:C:\Users\tommy\AppData\Local\Temp\capture2918jars\debugger-agent.jar=file:/C:/Users/tommy/AppData/Local/Temp/capture.props -Dfile.encoding=UTF-8 -classpath "C:\Program Files\Java\jdk1.8.0_181\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\ext\zipfs.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\jfxswt.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_181\jre\lib\rt.jar;D:\School\CSC435\BlockChain\out\production\Blockchain;D:\School\CSC435\BlockChain\lib\gson-2.8.4.jar;D:\Program Files\JetBrains\IntelliJ IDEA 2018.1\lib\idea_rt.jar" BlockChain 2
+Connected to the target VM, address: '127.0.0.1:65312', transport: 'socket'
+Process 2: Ports:
+		 Public Keys Port: 4712
+		 UnverifiedBlocksPort: 4822
+		 BlockChainPort: 4932
+Process 2: 
+Using input file: BlockInput2.txt
+
+Process 2: Starting the Unverified Block Consumer thread.
+Process 2: waiting on PublicKey
+Process 2: Key Manager Process listening on the port 1524.
+Process 2: BlockChain Process listening on the port 4932.
+Process 2: PublicKey Process listening on the port 4712.
+Process 2: Unverified Block Process listening on the port 4822.
+Process 2: Creating private/public key pair
+Sending public key to process 0
+Sending public key to process 1
+Sending public key to process 2
+Process 2: Public Key Client Connected
+Process 2: Key Manager Client Connected
+Process 2: Key Manager Client Connected
+Process 2: Key Manager Client Connected
+Process 2: Key Manager Client Connected
+Process 2: Key Manager Client Connected
+Process 2: Key Manager Client Connected
+Process 2: Key Manager Client Connected
+Process 2: Key Manager Client Connected
+Sending Unverified Block to be Signed
+Process 2: Key Manager Client Connected
+4 records read.
+Names from input:
+	Helen Keller
+	Abraham Lincoln
+	John Kennedy
+	Joe DiMaggio
+
+
+Process 2: Sending Unverified Block to Process 0
+Process 2: Sending Unverified Block to Process 1
+Process 2: Sending Unverified Block to Process 0
+Process 2: Sending Unverified Block to Process 2
+Process 2: Sending Unverified Block to Process 0
+Process 2: Sending Unverified Block to Process 0
+Process 2: Sending Unverified Block to Process 0
+Process 2: Sending Unverified Block to Process 1
+Process 2: Sending Unverified Block to Process 2
+Process 2: Sending Unverified Block to Process 1
+Process 2: Sending Unverified Block to Process 1
+Process 2: Sending Unverified Block to Process 0
+Process 2: Sending Unverified Block to Process 2
+Process 2: Sending Unverified Block to Process 2
+Process 2: Sending DummyBlock Block to Process 0
+Process 2: Sending Unverified Block to Process 1
+Process 2: Sending Unverified Block to Process 1
+Process 2: Sending DummyBlock Block to Process 1
+Process 2: Sending Unverified Block to Process 2
+Process 2: Sending DummyBlock Block to Process 2
+Process 2: Sending Unverified Block to Process 2
+Process 2: Key Manager Client Connected
+Process 2: Sending Unverified Block to Process 0
+Process 2: Key Manager Client Connected
+Process 2: Sending Unverified Block to Process 0
+Process 2: Unverified Block Client Connected
+Process 2: Received a new Unverified Block
+Process 2: Sending Unverified Block to Process 1
+Process 2: Sending Unverified Block to Process 1
+Process 2: Sending Unverified Block to Process 2
+Process 2: Sending Unverified Block to Process 2
+Process 2: Sending Unverified Block to Process 0
+Process 2: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Julie",
+    "LastName": "Wilson",
+    "SSN": "123-45-6999",
+    "DOB": "1996.03.07",
+    "Diagnosis": "Insomnia",
+    "Treatment": "Exercise",
+    "Medication": "HotPeppers"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "28ce2cc53e5149603ab2f0997ee43cca9d9172d3bd437e7774e3cee9e587a7b3",
+  "SignedSHA256DataBlock": "Vy/XC6a5wTRZ3F0hSqMdrp4H+oQuT1iXWKHutJjiCushgYBtCEqzGzkX0A79xM0K+Lrmvc6uBNMZnQij4NOcRH01FFskmHfihJisZJVF85GsD77FU3vZ4eva+MVsADEOvFdJfAwLvqWCQ9PvbUn/T+RnSymWS8IiMYXuwp+ENSg=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "44c1e462-3065-4802-8d2c-8be3f7b61b5d",
+  "SignedBlockId": "ITW+/nw0a4Zj2Ic+7Pf9wncGyiOLVnQQZhrzZiHg7t53c4slTMukiaGYchFac1dDUGcYsTbhhSAviDhLuFrKHZ2Ul17G6ahC/H8eSBhShphKuN36KQU8rKmvafSyubCAwUs92akwf8WPncAadbSO4XyKZEKDDRp41uGP789H+jo=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "0",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 2: Sending Unverified Block to Process 0
+Process 2: Unverified Block Client Connected
+Process 2: Received a new Unverified Block
+Process 2: Unverified Block Client Connected
+Process 2: Sending Unverified Block to Process 1
+Process 2: Unverified Block Client Connected
+Process 2: Received a new Unverified Block
+Process 2: Sending Unverified Block to Process 2
+Process 2: Received a new Unverified Block
+Process 2: Unverified Block Client Connected
+Process 2: Received a new Unverified Block
+Process 2: Unverified Block Client Connected
+Process 2: Received a new Unverified Block
+Process 2: Key Manager Client Connected
+Process 2: Unverified Block Client Connected
+Process 2: Unverified Block Client Connected
+Process 2: Received a new Unverified Block
+Process 2: Unverified Block Client Connected
+Process 2: Received a new Unverified Block
+Process 2: Key Manager Client Connected
+Process 2: Sending Unverified Block to Process 1
+Process 2: Sending updated block ledger
+Process 2: Received a new Unverified Block
+Process 2: Sending Unverified Block to Process 2
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Sending Unverified Block to Process 0
+Process 2: Sending Unverified Block to Process 0
+Process 2: Unverified Block Client Connected
+Process 2: Received a new Unverified Block
+Process 2: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Sally",
+    "LastName": "McCutty",
+    "SSN": "123-456-999",
+    "DOB": "1970.01.01",
+    "Diagnosis": "Migraine",
+    "Treatment": "IcePack",
+    "Medication": "Almotriptan"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "aff6c698b1af261c3fc6b343138b4540e2ae2ef5c19a996705f9d7cc4da67b87",
+  "SignedSHA256DataBlock": "AUrSnq50nLamQY6FX+jcKzEJMH0BQ9I7S1OBeJrr5sNeZVl/T/0t4oGVkVseOPzImbFb/Yg0p54NxGpNeKkkiVheIKCEXqWousrAvG09pIa/SWhQQ2Ze4qcC07XV9YarLgvTdqck8lM2PWUEI8ixkkApGZHIrJLiaYQOP2Oa5Aw=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "b916cd22-1910-4f29-9e93-af7298a83c79",
+  "SignedBlockId": "VaGup67idgUOc7ws4nLo9h6WMHti3aRBP4+WveYxCfnCwUyRGKu8h7mmNB6enPJu5mQhJprOEqJa/H/RnKqMoRljSmhRktPOzOgJAJUNhm6JTS7RwezuiA7BWeKXoMTg21+w3EFyxktcVbAXmDGdtWv32BLBV496cGHMAj08S6E=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "1",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 2: Sending Unverified Block to Process 1
+Process 2: Sending Unverified Block to Process 1
+Process 2: Sending Unverified Block to Process 2
+*********************ERROR********************
+Process 2: Record's data block has an been signed by an invalid private key
+*********************ERROR********************
+Process 2: Sending Unverified Block to Process 2
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Rita",
+    "LastName": "Vita",
+    "SSN": "999-456-789",
+    "DOB": "1992.01.31",
+    "Diagnosis": "ObessivePersonality",
+    "Treatment": "TryToRelax",
+    "Medication": "Ibuprofen"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "6e8dec1cc250835597b8a0284b92c0798ecdf92e5de4be75678eb84f1dc7ae54",
+  "SignedSHA256DataBlock": "FIGIvS7tUL+DHPzy+VhXidtr/8/aZHLHUcfuVVYvdRjmW0Lm4W5SnNrTpg0XeIPxejTcoTylQcITeWZ5a5zxzkCF8tKwanwSYzaXerAg3isBOgGHxZxlNI0OaWljCtpnGQWtMTsRwDMW3mlzKDj54kmIfM0QjAXzOFzqKiuZrPo=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "4ce25fc8-844c-454d-8c9c-b162f8e3bdc4",
+  "SignedBlockId": "GRsjlSOuew3vmPBstHNoK5tnYvAl/Weo6LBvwgeupieCToVzBXNZnjR27CFV+forU0y9Toxgq63aE0g34iWR/7r5N/q7wwfkUnXgmpEIt3IriB1eXqIow8A8xXtJYiVVO4KsN0JMVcMoOYHKQlHdHXhZndNj0WBgz9WB9KzvOXY=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "1",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 2: Unverified Block Client Connected
+Process 2: Received a new Unverified Block
+Process 2: Unverified Block Client Connected
+Process 2: Received a new Unverified Block
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Unverified Block Client Connected
+Process 2: Received a new Unverified Block
+Process 2: Block Chain Client Connected
+Process 2: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Joe",
+    "LastName": "Blow",
+    "SSN": "123-45-6888",
+    "DOB": "1996.03.07",
+    "Diagnosis": "Smallpox",
+    "Treatment": "BedRest",
+    "Medication": "Whiskey"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "dcfe29bb2c75178d1884030542dcbbbff7f840eb2df6ccd626ef0d2473416c3c",
+  "SignedSHA256DataBlock": "Os2RK5xR/eWDt7I3tScMvLAN9KG5X4YMhkE+mx6962o7CCKvSgeg4rjwmW33SYtsNGm4vIsG+/PhxqI9/bRitb/bRlXiBpjIF4WgNtBukYXlY1FcyizKqO1HPmJsDjQTZ5tPgepjU5FUhipggUnFENpgwTYamF/6Mym2eP9sAwE=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "505cd721-0482-4c7c-af18-08a5415d723e",
+  "SignedBlockId": "XZWgaB8DPmrTQOWBp58jlSq0NoDHuUx1nDuIjK1A6ZodAaKlAjh67iQgaEbW/V94xk/UUbsK9VGGj0hC7h5RO/UbaHU0o7pgxM5vEZc+vNRWG1ChFpHhre7xhCoJG/eKZKHy5HA5FP47VdI9CpJYjLrIwYYHsNBRU2malVL97nY=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "0",
+  "PreviousHash": "",
+  "Seed": ""
+}
+*********************ERROR********************
+Process 2: Record's data block has an been signed by an invalid private key
+*********************ERROR********************
+Process 2: Block Chain Client Connected
+Process 2: Sending updated block ledger
+Process 2: Block Chain Client Connected
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Wei",
+    "LastName": "Xu",
+    "SSN": "123-456-333",
+    "DOB": "1996.03.22",
+    "Diagnosis": "Shingles",
+    "Treatment": "WaitForRelief",
+    "Medication": "Zovirax"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "81d4307e3955716185582bb0562f4fc86e330422f3c81ac8ccd73f8dcfcda9a1",
+  "SignedSHA256DataBlock": "d1sSsj4rb3YJNkaizYRugl+hC2lqjI5kiHVyYs1CE7r2HPCii/iaXloRv6zwAOnI9QJ1/N8Sdfld3oCw4SlrmXI5CRvE6cQ1+RiOhYxRI/hP09Q+TA2XYjVXFgbf1nk2JHA6LUig2B3vZ52qX68FRvmCbqqMr5byxMXXSt2Bj7M=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "701e3ddb-3171-4989-aa2d-b322250c1c8f",
+  "SignedBlockId": "GO0lEeXz+2k0TPiJLbMZOhMROLUCfSODqjcFQXhqmIZhWi+DdD0hAYnJ+grM6FBeD3md9Mu0+gq1jCHKLvu3Y7GYb7QanGJY1Zq+TKBhCq+3cbidilELQrlDHzNjuB0maLlA3bE6+Vp5J2Az/74QslWKhxZkDelaSFT8XlYtNzA=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "1",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 2: Sending updated block ledger
+Process 2: Block Chain Client Connected
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Wayne",
+    "LastName": "Blaine",
+    "SSN": "123-45-6777",
+    "DOB": "1942.07.07",
+    "Diagnosis": "Measles",
+    "Treatment": "WaitToGetBetter",
+    "Medication": "CodLiverOil"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "4c61939ac627aeb0b89b8e0e4649498b16b4a58a469c5dffb54cded6daaacf1b",
+  "SignedSHA256DataBlock": "Os2RK5xR/eWDt7I3tScMvLAN9KG5X4YMhkE+mx6962o7CCKvSgeg4rjwmW33SYtsNGm4vIsG+/PhxqI9/bRitb/bRlXiBpjIF4WgNtBukYXlY1FcyizKqO1HPmJsDjQTZ5tPgepjU5FUhipggUnFENpgwTYamF/6Mym2eP9sAwE=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "dfc551a0-cdd6-4946-8787-a2da7ca3d1ad",
+  "SignedBlockId": "FodbbZg08qYJQiP0qSm49TbJLXOhmYw12ToMyQ/fhFSpjzdidQTM2O0BqEl1yDgM4tWm/+xVN/KqRoFDYJ42N7wMSkA0pV52dNC0vze4AsgA6jBnoiDzpsUkjXI7T0RRUJLxxFSe9r1Q/k02jOobwrwT+13VnBzu4lmgONbVcvQ=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "0",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+*********************ERROR********************
+Process 2: Record's data block has an been signed by an invalid private key
+*********************ERROR********************
+Process 2: Sending updated block ledger
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Process 2: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "John",
+    "LastName": "Smith",
+    "SSN": "123-45-6789",
+    "DOB": "1996.03.07",
+    "Diagnosis": "Chickenpox",
+    "Treatment": "BedRest",
+    "Medication": "aspirin"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "0d5be93aaeabb3499828bdef13f2cdbdf5d5a40191c43bdd918097cadf595c89",
+  "SignedSHA256DataBlock": "W/QIkFiF1PbkkaYo5zGG1CjWUEKRDv1wpGQYfqr2lAyG/V3GOa7a8EyvuqM9dSZKKMdfLb7XORa0Wp++BCgN3tnnfydD5P4oNX1b0QifHPe4fSLiqj8HwrMYscIoB+9+0lDrjN+1XWUvV81sA2u9N/l+HFGkkrUiJkSWar6HPow=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "4ee170c7-bc98-44fb-85c3-2e6dc47465d9",
+  "SignedBlockId": "QWBCN+BHwSlOwKSPcjWwC7D58k0IXzffmvZKphYBlPu1XO+YotsdTGpu8N1UmiVI9RGgc8dVXEnqX4Um7Lp21qLrGXXF2K298Nl26l2qM1Ib4hurm+IB1CU31jKH6/m4/4Emr7Zv2daGfvKB7qVFnkzghZiDEbJs37q04ndwxhQ=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "0",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Block Chain Client Connected
+Process 2: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Helen",
+    "LastName": "Keller",
+    "SSN": "666-45-6789",
+    "DOB": "1880.06.27",
+    "Diagnosis": "Arthritis",
+    "Treatment": "WarmCloths",
+    "Medication": "Aspirin"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "c669b5ca867249c640704b2e5a89a5dfcc67d8023c651f88f82047401ed4ea04",
+  "SignedSHA256DataBlock": "QGigrx/W1zdFwCXd/flNmW3buNbfpRnvUT1jiM9U1U774n7Cgc+esMFgnJ67by1ReLIV0IRBLKSIGU058Ru34PF/Uu5NfNWIoaJQW01D5o3Tt2GBE/T9fYsg1Q5esKbhLs5gRNXP/GXnGOESqBrfTmfHafjkNgoc8mOLwe4zgyc=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "bd9fceae-a952-4958-a340-3b2a6f6cf61f",
+  "SignedBlockId": "OyQxk3vxwWXfrvdWO02GXQYgyvieVDRJreHAqeKu9tPrny6MTN05pDvep27+6RmaxJgzC9yctDdQ+sacpWRDHYmlqFgaAGKCNPFbY5xo4Zf3s7KiCHvqxKafaPnZCkqnOUUcL0H3YU8FvRlmxVixfuwQsck6Ux2NiC7Cgs4Qds8=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "2",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "",
+    "LastName": "",
+    "SSN": "",
+    "DOB": "",
+    "Diagnosis": "",
+    "Treatment": "",
+    "Medication": ""
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "e864138cae72e7954d150baa3313be7622ed31e271fdee26f53219c67e954b5d",
+  "SignedSHA256DataBlock": "WEfX7NA535UgK3EwyDHCyy2aW1y2mKX+yPl9oism46Qu0RwJ/KK4ajZTzY5sunnu4mdrZlS2+e5NvmZg8HOLEa829TR48eq5mz0ZPmF1X9CWw0QprGmFlZZlG4fhA4PlNH8zK8UP0FlZeIKIqV9iGtzAno8tMwC8wSxG/9Wx9eY=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "0",
+  "SignedBlockId": "MasMlS3rKupjqhvH93fkQW2UjwbN5vZMZsIKjTVij0EAky8V9LA+ZL5BK5VNmXKAAAV9QrEsg0Os78Yl04TH7qvu8FDU6kXmHk3Dl6OtcVO+IIcKGExVBky+C93Jwr8bGrO8Yu1hb6kaUgDWsLosXLa+VGdIy9hOMdXjRm2VWUc=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "0",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Bruce",
+    "LastName": "Lee",
+    "SSN": "456-789-123",
+    "DOB": "1940.11.27",
+    "Diagnosis": "SoreStomach",
+    "Treatment": "LessCombat",
+    "Medication": "Vicodine"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "59a52c8b5004dd11c16c114cdd28b20113465658b1f7b0427b1e82dd5c253c48",
+  "SignedSHA256DataBlock": "AUrSnq50nLamQY6FX+jcKzEJMH0BQ9I7S1OBeJrr5sNeZVl/T/0t4oGVkVseOPzImbFb/Yg0p54NxGpNeKkkiVheIKCEXqWousrAvG09pIa/SWhQQ2Ze4qcC07XV9YarLgvTdqck8lM2PWUEI8ixkkApGZHIrJLiaYQOP2Oa5Aw=",
+  "CreationTime": "Oct 23, 2018 10:23:45 PM",
+  "BlockId": "9f44be6a-fc98-4234-9522-655de0bcf0ef",
+  "SignedBlockId": "cLyXmSDHwsZBiKComUA8uz3BBYGXniAoo8w2fvZDPvxxkG/dUR0CPIx30eROq/AdHvJpEWPoBBc707wYwzPA2wzptwlw5FgS9oZqG/+5R9lGOYVBi9JHk0sRHj4sXO3FDTLfvWdTOzau2Jpc2jq6d/xn2/Ku6lK2RoEWGZvC+aE=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "1",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+*********************ERROR********************
+Process 2: Record's data block has an been signed by an invalid private key
+*********************ERROR********************
+Process 2: Sending updated block ledger
+Process 2: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Joe",
+    "LastName": "DiMaggio",
+    "SSN": "111-22-3333",
+    "DOB": "1914.11.25",
+    "Diagnosis": "SoreKnees",
+    "Treatment": "RestFromSports",
+    "Medication": "Aspirin"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "670bb01430e160db7d1ecdf38da49610e512ce235b2ac7380042c9187d185326",
+  "SignedSHA256DataBlock": "YhJRn8DiiIotlrD2hms59AjZ1B4wJGWopMDjbWFsw4N6WE1jeYr0P/TtboVb5lmyg9bYE1eT8AFeNELXCWh5MAfcV4Y+X9TtBQrfEJnhD2PDy4yUquIuen77Q8DLumCYoDqolyhz9kAmcgy5sx6LXQx9XsPorR6JH8vJhRg9yt8=",
+  "CreationTime": "Oct 23, 2018 10:23:46 PM",
+  "BlockId": "69310bfc-c4e3-4cfc-accc-2870ba585bcf",
+  "SignedBlockId": "Va/mAIzDtPPVUkHoKRxG7Y0pjeM0GYDEQ4KGMuGjrYBahdVlqHVMdyEWfUq3+N5U03zQ3YCjOpIPR0HnQL9NBTOJ25FfTkp/BEy7c550jg+HpFza0Wf8jqXTH3c5cX9s2FkD5IKuzdiULs7oV2Qol6AkEKoCJYlO0cN58yg/ySo=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "2",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Process 2: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "Abraham",
+    "LastName": "Lincoln",
+    "SSN": "444-45-6888",
+    "DOB": "1809.02.12",
+    "Diagnosis": "GreviousWound",
+    "Treatment": "Surgery",
+    "Medication": "Whiskey"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "53efed2a7152059a922d765a20d06c3febdb30da8e5f9e16e17c42a42903310e",
+  "SignedSHA256DataBlock": "Zv7KIeWYydLRqI2bUr/IUE+AoSsv1yvL56umDU/AyXqKlZipWcEaIrcYmCcDwXDPSRfOnlMuubo9KWHbuuM9UWtE40ZP2l9yIBPZp+wBtBXB4VAywzDmO5BRxbTZn+ibKbloLkAzZ43Rw79s1bGjbxDWruXhtI6SxAQQtblttl8=",
+  "CreationTime": "Oct 23, 2018 10:23:46 PM",
+  "BlockId": "70ad4750-252c-43c1-aef2-c8694e002a74",
+  "SignedBlockId": "BzDPXbH/Xj/Zi9OGj2V2EKYkFbyCrvYZS8uj+L+g5OSrv+MvM29bBgk8kWc4OiMRdOKUzDvo9FAf1PLElDm/gtxjjNG2wePjAv8E3Qvz4MfBwO8kBcun8yInw3hpkcI1zKxp8j5KCIS7oLr2uWAx5BqMNUZ5hwDxHc2sTDdoO2E=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "2",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Block Chain Client Connected
+Process 2: Unverified block consumer got a new unverified block: {
+  "DataBlock": {
+    "FirstName": "John",
+    "LastName": "Kennedy",
+    "SSN": "333-45-6999",
+    "DOB": "1917.05.29",
+    "Diagnosis": "AddisonsDisease",
+    "Treatment": "DrugTherapy",
+    "Medication": "Steroids"
+  },
+  "BlockNumber": 0,
+  "SHA256HashedDataBlock": "ab9fc5ea88fca8a01ae676f902d55393e8940aee608944cca5d367fdb0b5ca76",
+  "SignedSHA256DataBlock": "MLdnV5UNhZxFh4ZgindNwNM7cSCkUfvP3vbF5lHITDcJT7u7lCH9B3U7roncBKPdK0KoLerA/E6iJF2A1xu7p4fFHqmP07u4uLkCWOI8/pDWy8Bpnwzkr/cUQuc2vpT1KzzNnWSFcnfyjtuCAk2Q20voo+d8z/qrg1fbBVLxOCc=",
+  "CreationTime": "Oct 23, 2018 10:23:46 PM",
+  "BlockId": "8ad0098d-2769-4d5b-a6e8-49fd5ca6dba8",
+  "SignedBlockId": "ESNUrYf+IXUYrwLTNuOXNzou7ReqfQvfquNPxSRYF5VIgJl1Vy0DtNp0eou5tGRxFIKMBv+mczMTbysZjcWrSOnzqSBo6/xp7Ib1+SseU+2j7Krn5hsV+uiqDbm1u4pMDgHBGXW8YczKtWgxYCqKZMPErMgzT4ZHFKK28YGGeXQ=",
+  "VerificationProcessId": "",
+  "CreatingProcess": "2",
+  "PreviousHash": "",
+  "Seed": ""
+}
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Sending updated block ledger
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Process 2: Block Chain Client Connected
+Disconnected from the target VM, address: '127.0.0.1:65312', transport: 'socket'
+
+Process finished with exit code -1
